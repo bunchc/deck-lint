@@ -1,0 +1,13 @@
+functions: [loadFromFile]
+rules:
+  plugin-update-check:
+    description: "Check for plugins with schema changes for 3.x are configured"
+    message: "Plugin '{{value}}' has had a schema change for Kong 3.x: {{error}}"
+    type: validation
+    given: "$..plugins[*].name"
+    severity: error
+    then:
+      field: "@"
+      function: loadFromFile
+      functionOptions:
+        filename: "./changed-plugins.txt"
