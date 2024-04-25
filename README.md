@@ -14,6 +14,10 @@ npm install -g @stoplight/spectral
 
 Once Spectral is installed, you can use it to lint your Kong Deck files with the custom rules defined in `plugin-update-check.yaml`.
 
+1. Clone this repo
+2. Install Spectral
+3. Run `spectral lint` from within this project's directory (see example below)
+
 To do this, run the following command:
 
 ```bash
