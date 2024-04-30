@@ -1,0 +1,17 @@
+_format_version: "3.0"
+services:
+  - name: svc1
+    host: mockbin.org
+    protocol: http
+    routes:
+      - name: r1
+        paths:
+          - /r1
+plugins:
+  - name: pre-function
+    route: r1
+    config:
+      access:
+        - |
+          kong.log.err("foo")
+          kong.response.exit(418)

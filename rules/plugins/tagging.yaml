@@ -1,0 +1,8 @@
+rules:
+  plugins-tagging:
+    description: "Plugins should have tags."
+    given: $..plugins[*].tags
+    severity: warn
+    then:
+      - field: tags
+        function: truthy
