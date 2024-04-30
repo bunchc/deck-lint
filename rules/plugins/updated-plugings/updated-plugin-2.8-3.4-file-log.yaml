@@ -1,0 +1,11 @@
+rules:
+  plugin-update-check-file-log:
+    description: "Check for plugins with schema changes for 3.x are configured"
+    message: "Plugin 'file-log' has had a schema change for Kong 3.4 and may need updating"
+    given: $..plugins[*].name
+    severity: warn
+    then:
+      field: "@"
+      function: pattern
+      functionOptions:
+        notMatch: "^file-log"

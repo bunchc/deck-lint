@@ -1,0 +1,3 @@
+extends:
+  # Style rules
+  - tagging.yaml
