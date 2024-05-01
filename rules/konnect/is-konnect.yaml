@@ -1,0 +1,10 @@
+# Ensures the deck file has the _konnect entry
+rules:
+  # Ensure the deck file has a _konnect field
+  konnect:
+    description: "File must have a _konnect: field"
+    given: "$"
+    severity: error
+    then:
+      - field: "_konnect"
+        function: defined

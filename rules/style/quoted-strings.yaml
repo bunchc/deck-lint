@@ -1,0 +1,11 @@
+# Ensure strings are quoted
+rules:
+  quoted-strings:
+    description: All strings should be quoted
+    given: $..*
+    type: validation
+    severity: warn
+    then:
+      function: pattern
+      functionOptions:
+        match: '^".*"$'

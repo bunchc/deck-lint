@@ -1,0 +1,4 @@
+# All style related rules
+extends:
+  - ./rules/style/format.yaml
+  - ./rules/style/quoted-strings.yaml
