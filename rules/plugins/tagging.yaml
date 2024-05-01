@@ -1,7 +1,7 @@
 rules:
   plugins-tagging:
-    description: "Plugins should have tags."
-    given: $..plugins[*].tags
+    description: "Plugins should have tags"
+    given: $..plugins[*]
     severity: warn
     then:
       - field: tags

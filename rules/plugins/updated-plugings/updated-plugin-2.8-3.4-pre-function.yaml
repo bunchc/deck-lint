@@ -1,9 +1,0 @@
-rules:
-  plugin-update-check-pre-function:
-    description: "Check for plugins with schema changes"
-    given: $..plugins[*].name
-    severity: error
-    then:
-      function: pattern
-      functionOptions:
-        notMatch: "^pre-function"

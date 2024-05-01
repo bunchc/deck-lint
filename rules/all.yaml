@@ -1,0 +1,3 @@
+extends:
+  - ./rules/plugins/all.yaml
+  - ./rules/services/all.yaml

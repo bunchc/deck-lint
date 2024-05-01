@@ -1,0 +1,9 @@
+rules:
+  plugin-update-check-proxy-cache-advanced:
+    description: "Check for plugins with schema changes for 3.x are configured"
+    given: $..plugins[*].name
+    severity: warn
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: "^proxy-cache-advanced"

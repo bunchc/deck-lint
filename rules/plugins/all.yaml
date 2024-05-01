@@ -1,5 +1,5 @@
 extends:
   # Style rules
-  - tagging.yaml
+  - ./rules/plugins/tagging.yaml
   # Updated Plugins
-  - updated-plugins/update-plugins-2.8-3.4.yaml
+  - ./rules/plugins/updated-plugins/updated-plugins-2.8-3.4.yaml
