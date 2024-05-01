@@ -1,0 +1,4 @@
+# Konnect specific rules
+extends:
+  - ./rules/konnect/is-konnect.yaml
+  - ./rules/konnect/no-workspaces.yaml

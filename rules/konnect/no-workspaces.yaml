@@ -1,0 +1,9 @@
+rules:
+  # Ensure the deck file does not contain "workspaces"
+  format-version:
+    description: "Konnect does not support workspaces"
+    given: "$"
+    severity: error
+    then:
+      - field: _workspace
+        function: undefined

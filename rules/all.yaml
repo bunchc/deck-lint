@@ -1,3 +1,9 @@
 extends:
+  # Style
+  - ./rules/style/all.yaml
+  # Konnect
+  - ./rules/konnect/all.yaml
+  # Plugins
   - ./rules/plugins/all.yaml
+  # Services
   - ./rules/services/all.yaml
