@@ -1,6 +1,6 @@
 rules:
   plugins-tagging:
-    description: "Plugins should have tags"
+    description: "Dynamic Plugin ordering in use"
     given: $..plugins[*]
     severity: warn
     then:
