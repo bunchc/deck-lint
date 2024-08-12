@@ -1,0 +1,46 @@
+# Rules taken from the hardening checklist
+# https://docs.google.com/document/d/1ZGc6JBHsAOwuTHN1Y97lHunpRwlWfh9CFbccd7TlyuI/edit#heading=h.k2c2q2b57ust
+
+rules:
+  # All traffic from Kong to upstream services should use https or mTLS
+  all-services-https:
+    description: "All services should use HTTPS."
+    given: $..services[*].protocol
+    severity: warn
+    then:
+      - function: pattern
+        functionOptions:
+          match: "^https"
+
+  # Prefer use of key-auth-enc over key-auth
+  key-auth-encrypted:
+    description: "Consider using key-auth-enc instead of key-auth plugin."
+    given: $..plugins[*].name
+    severity: warn
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: "^key-auth$"
+
+  # Enable rate limiting globally to provide all services protection
+  global-rate-limiting:
+    description: "Enable rate limiting globally to provide all services protection."
+    given: $.plugins[?(@.name == "rate-limiting" || @.name == "rate-limiting-advanced")]
+    severity: warn
+    then:
+      - field: route
+        function: falsy
+      - field: service
+        function: falsy
+      - field: consumer
+        function: falsy
+
+  # Prefer rate-limiting-advanced over rate-limiting
+  rate-limiting-advanced:
+    description: "Consider using rate-limiting-advanced instead of rate-limiting plugin."
+    given: $..plugins[*].name
+    severity: warn
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: "^rate-limiting$"

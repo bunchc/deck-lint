@@ -1,0 +1,5 @@
+extends:
+  # Security
+  - ./rules/prod_readiness_guide/security.yaml
+  # Plugins
+  - ./rules/prod_readiness_guide/plugins.yaml

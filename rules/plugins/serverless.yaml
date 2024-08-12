@@ -1,0 +1,13 @@
+# Kong's serverless functions `pre-function` and `post-function` are
+# able to execute arbitrary Lua code. This rule warns when a plugin
+# with the name `pre-function` or `post-function` is found.
+
+rules:
+  plugin-warn-on-serverless:
+    description: "Serverless plugin found."
+    given: $..plugins[*].name
+    severity: warn
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: "^pre-function|post-function"

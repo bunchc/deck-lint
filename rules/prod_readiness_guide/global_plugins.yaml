@@ -1,0 +1,46 @@
+# Global plugin checks
+rules:
+  # We recommend having at last one plugin from each of these categories enabled globally:
+  # - Logging
+  # - Monitoring
+  # - Tracing/Telemetry (optional)
+  # - Authentication
+
+  recommended-global-plugins:
+    description: "Check for recommend global plugins."
+    given: $.plugins[*]
+    severity: warn
+    then:
+      field: name
+      function: "enumeration"
+      functionOptions:
+        values:
+          "http-log, file-log, tcp-log, udp-log, syslog, loggly, kafka-log, kong-splunk-log"
+
+          # Logging
+#          # Monitoring
+#          - prometheus
+#          - statsd
+#          - datadog
+#          - statsd-advanced
+#          - app-dynamics
+#          # Tracing/Telemetry
+#          - opentelemetry
+#          - zipkin
+#          # Authenticaion Plugins
+#          - basic-auth
+#          - hmac-auth
+#          - jwe-decrypt
+#          - jwt
+#          - key-auth
+#          - key-auth-enc
+#          - jwt-signer
+#          - ldap-auth
+#          - ldap-auth-advanced
+#          - mtls-auth
+#          - oauth2
+#          - oauth2-introspection
+#          - openid-connect
+#          - saml
+#          - session
+#          - vault-auth

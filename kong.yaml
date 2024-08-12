@@ -1,4 +1,46 @@
 _format_version: "3.0"
+_plugin_configs:
+  aws-lambda-common-config:
+    aws_key: "{vault://your-vault/AWS_KEY}"
+    aws_secret: "{vault://your-vault/AWS_SECRET}"
+    aws_region: "us-east-1"
+
+consumers:
+  - basicauth_credentials:
+      - password: "{vault://my-env-vault/consB-password}"
+        username: consB
+    keyauth_credentials:
+      - key: "{vault://my-env-vault/consB-key}"
+    username: consB
+
+routes:
+  - https_redirect_status_code: 426
+    name: serviceless-route1
+    path_handling: v0
+    paths:
+      - /noserviceroute1
+    preserve_host: false
+    protocols:
+      - http
+      - https
+    regex_priority: 0
+    request_buffering: true
+    response_buffering: true
+    strip_path: true
+  - https_redirect_status_code: 426
+    name: serviceless-route2
+    path_handling: v0
+    paths:
+      - /noserviceroute2
+    preserve_host: false
+    protocols:
+      - http
+      - https
+    regex_priority: 0
+    request_buffering: true
+    response_buffering: true
+    strip_path: true
+
 services:
   - name: svc1
     host: mockbin.org
@@ -7,6 +49,40 @@ services:
       - name: r1
         paths:
           - /r1
+  - name: fund-service
+    url: http://localhost # Dummy URL, as the real endpoint is the Lambda function
+    plugins:
+      - name: aws-lambda
+        _config: aws-lambda-common-config
+        config:
+          function_name: "fund"
+    routes:
+      - name: fund-route
+        paths:
+          - /fund
+  - name: txinfo-service
+    url: http://localhost # Dummy URL, as the real endpoint is the Lambda function
+    plugins:
+      - name: aws-lambda
+        _config: aws-lambda-common-config
+        config:
+          function_name: "txinfo"
+    routes:
+      - name: txinfo-route
+        paths:
+          - /txinfo
+  - name: bal-service
+    url: http://localhost # Dummy URL, as the real endpoint is the Lambda function
+    plugins:
+      - name: aws-lambda
+        _config: aws-lambda-common-config
+        config:
+          function_name: "bal"
+    routes:
+      - name: bal-route
+        paths:
+          - /bal
+
 plugins:
   - name: pre-function
     route: r1
