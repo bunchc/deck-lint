@@ -1,0 +1,12 @@
+# Enforces the use of a dedicated GatewayClass for each Kong Ingress Controller (KIC) deployment to ensure tenant isolation.
+formats: ["kubernetes"]
+rules:
+  gatewayclass-unique-controller:
+    description: "Ensures that each GatewayClass has a unique controllerName."
+    message: "The controllerName '{{.value}}' must be unique across all GatewayClass resources."
+    severity: "error"
+    given: "$.spec.controllerName"
+    then:
+      function: "unique"
+      functionOptions:
+        scope: "document"

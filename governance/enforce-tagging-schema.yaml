@@ -1,0 +1,21 @@
+# Documentation: enforce-tagging-schema
+#
+# Validates that all resource tags follow the standardized `key:value` format.
+# A consistent tagging schema is critical for automation, reporting, and
+# policy enforcement. This rule prevents free-form tags and ensures that all
+# metadata conforms to the expected structure, making it easier to parse and
+# act upon.
+#
+# Example valid tag: `team:backend`, `env:production`
+# Example invalid tag: `staging`, `team-backend`
+#
+rules:
+  enforce-tagging-schema:
+    description: "All resource tags must follow the 'key:value' format."
+    message: "The tag '{{value}}' is not compliant. Please use the 'key:value' format."
+    given: "$..tags[*]"
+    severity: "warn"
+    then:
+      function: "pattern"
+      functionOptions:
+        match: "^[a-z0-9_.-]+:[a-zA-Z0-9_.-]+$"

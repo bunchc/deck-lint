@@ -1,0 +1,12 @@
+# Ensures a one-to-one mapping between a KIC instance and a Gateway resource for deterministic behavior.
+formats: ["kubernetes"]
+rules:
+  kic-gateway-mapping:
+    description: "Ensures a one-to-one mapping between a KIC instance and a Gateway resource."
+    message: "Each Gateway must have a unique gatewayClassName to ensure a one-to-one mapping with a KIC instance."
+    severity: "error"
+    given: "$.spec.gatewayClassName"
+    then:
+      function: "unique"
+      functionOptions:
+        scope: "document"

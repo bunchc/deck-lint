@@ -1,0 +1,20 @@
+# Documentation: enforce-secure-opentelemetry-exporter
+#
+# This rule ensures that the OpenTelemetry plugin is configured to use a
+# secure exporter endpoint (e.g., HTTPS). Using a secure exporter is
+# essential to protect telemetry data from eavesdropping and tampering.
+#
+# For more information, see the OpenTelemetry documentation:
+# https://opentelemetry.io/docs/specs/otel/protocol/exporter/
+#
+rules:
+  enforce-secure-opentelemetry-exporter:
+    description: "Ensures that the OpenTelemetry plugin is configured to use a secure exporter endpoint."
+    message: "The OpenTelemetry plugin should be configured to use a secure exporter endpoint (e.g., HTTPS)."
+    given: "$.plugins[?(@.name == 'opentelemetry')].config"
+    severity: "error"
+    then:
+      - field: "endpoint"
+        function: "pattern"
+        functionOptions:
+          match: "^https://"

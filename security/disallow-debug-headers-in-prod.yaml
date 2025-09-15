@@ -1,0 +1,21 @@
+# Kong Gateway Linting Rule: Disallow Debug Headers in Production
+# Description: This rule flags routes tagged as production ('env:prod') that
+# are configured to add or echo debug headers. Exposing debug information in
+# a production environment can lead to information leakage and security
+# vulnerabilities.
+
+rules:
+  disallow-debug-headers-in-prod:
+    description: "Routes tagged as 'env:prod' must not use debug headers."
+    message: "Route '{{value.name}}' is tagged for production and should not have debug headers."
+    given: "$.routes[?(@.tags[*] == 'env:prod')].plugins[*]"
+    severity: "error"
+    then:
+      function: pattern
+      functionOptions:
+        notMatch:
+          name: "request-transformer"
+          config:
+            add:
+              headers:
+                - ".*debug.*"

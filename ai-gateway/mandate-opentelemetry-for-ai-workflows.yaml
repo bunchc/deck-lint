@@ -1,0 +1,29 @@
+# Documentation:
+# This rule requires the OpenTelemetry plugin on all AI Gateway routes to enable
+# end-to-end tracing. AI workflows can be complex and involve multiple services,
+# making observability critical for debugging and performance monitoring.
+#
+# The OpenTelemetry plugin provides distributed tracing capabilities, allowing you
+# to visualize the entire lifecycle of a request as it traverses the AI Gateway
+# and upstream services. This rule ensures that all routes tagged with 'ai-gateway'
+# have the 'opentelemetry' plugin enabled.
+
+rules:
+  mandate-opentelemetry-for-ai-workflows:
+    description: Requires the OpenTelemetry plugin on all AI Gateway routes.
+    message: "AI Gateway routes must have the OpenTelemetry plugin enabled for end-to-end tracing."
+    given: "$.routes[?(@.tags && @.tags.includes('ai-gateway'))]"
+    severity: error
+    then:
+      field: plugins
+      function: schema
+      functionOptions:
+        schema:
+          type: array
+          contains:
+            type: object
+            properties:
+              name:
+                const: opentelemetry
+            required:
+              - name

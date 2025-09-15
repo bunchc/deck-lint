@@ -1,0 +1,20 @@
+# Documentation: enforce-w3c-trace-context
+#
+# This rule enforces the use of W3C Trace Context for trace propagation
+# in the OpenTelemetry plugin. The W3C Trace Context is a standard that
+# ensures interoperability across different tracing systems.
+#
+# For more information, see the OpenTelemetry documentation:
+# https://opentelemetry.io/docs/specs/otel/trace/
+#
+rules:
+  enforce-w3c-trace-context:
+    description: "Enforces the use of W3C Trace Context in the OpenTelemetry plugin."
+    message: "OpenTelemetry plugin must be configured to use W3C Trace Context for trace propagation."
+    given: "$.plugins[?(@.name == 'opentelemetry')].config"
+    severity: "error"
+    then:
+      - field: "header_type"
+        function: "pattern"
+        functionOptions:
+          match: "w3c"

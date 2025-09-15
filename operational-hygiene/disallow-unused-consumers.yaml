@@ -1,0 +1,28 @@
+#
+# Rule: Disallow Unused Consumers
+#
+# Description: This rule flags consumers that are not associated with any
+# credentials or ACLs. Unused consumers can represent a security risk if
+# they are ever compromised, and they add unnecessary clutter to the
+# configuration.
+#
+# Severity: warn
+#
+rules:
+  disallow-unused-consumers:
+    description: "Consumers should be associated with credentials or ACLs."
+    message: "Consumer '{{property}}' is not associated with any credentials or ACLs."
+    given: "$.consumers[*]"
+    severity: warn
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          oneOf:
+            - required: ["acls"]
+            - required: ["keyauth_credentials"]
+            - required: ["hmacauth_credentials"]
+            - required: ["jwt_secrets"]
+            - required: ["basicauth_credentials"]
+            - required: ["oauth2_credentials"]

@@ -1,0 +1,35 @@
+#
+# Rule: Enforce mTLS for Upstreams
+#
+# Description: This rule ensures that any upstream service is configured for
+# mutual TLS (mTLS) by requiring the service.protocol to be 'https' and
+# service.client_certificate to be set. This is a critical security measure
+# to authenticate both the client and server, preventing unauthorized access
+# and man-in-the-middle attacks.
+#
+# Severity: error
+#
+rules:
+  upstream-mtls-required:
+    description: "Upstream services must be configured with mTLS."
+    message: "Service '{{property}}' must use 'https' protocol and have a client_certificate defined."
+    given: "$.services[*]"
+    severity: error
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          properties:
+            protocol:
+              const: https
+            client_certificate:
+              type: object
+              properties:
+                id:
+                  type: string
+              required:
+                - id
+          required:
+            - protocol
+            - client_certificate

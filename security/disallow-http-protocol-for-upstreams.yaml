@@ -1,0 +1,11 @@
+rules:
+  disallow-http-protocol-for-upstreams:
+    description: "Upstream services must use the 'https' protocol."
+    message: "Upstream service '{{property}}' must use 'https' protocol."
+    given: "$.services[*]"
+    severity: "error"
+    then:
+      field: "protocol"
+      function: "pattern"
+      functionOptions:
+        match: "^https$"

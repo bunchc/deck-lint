@@ -1,0 +1,20 @@
+# Documentation: recommend-slo-monitoring-tags
+#
+# This rule recommends adding SLO-related tags to services and routes
+# to support SLO monitoring. These tags can be used to identify and
+# filter metrics related to specific SLOs.
+#
+# Example tags:
+#   - slo: "true"
+#   - slo_team: "my-team"
+#
+rules:
+  recommend-slo-monitoring-tags:
+    description: "Recommends adding SLO-related tags to services and routes."
+    message: "Consider adding SLO-related tags to services and routes to support SLO monitoring."
+    given: "$.services[*].tags"
+    severity: "info"
+    then:
+      - function: "pattern"
+        functionOptions:
+          match: "slo.*"

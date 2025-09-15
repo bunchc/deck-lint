@@ -1,0 +1,29 @@
+# Documentation:
+# This rule requires the AI Rate Limiting Advanced plugin for any route that proxies
+# to a token-based LLM. Token-based LLMs consume resources based on the number of
+# tokens processed, which can vary significantly from the number of requests.
+#
+# The AI Rate Limiting Advanced plugin provides fine-grained control over token usage,
+# preventing individual consumers from exhausting token quotas and ensuring fair usage.
+# This rule identifies routes with an AI Proxy plugin configured for a token-based
+# model and ensures that the 'ai-rate-limiting-advanced' plugin is also applied.
+
+rules:
+  enforce-token-based-rate-limiting-for-llms:
+    description: Requires AI Rate Limiting Advanced plugin for token-based LLMs.
+    message: "Routes proxying to token-based LLMs must use the 'ai-rate-limiting-advanced' plugin."
+    given: "$.routes[?(@.plugins[?(@.name == 'ai-proxy' && @.config.route_type.startsWith('llm/'))])]"
+    severity: error
+    then:
+      field: plugins
+      function: schema
+      functionOptions:
+        schema:
+          type: array
+          contains:
+            type: object
+            properties:
+              name:
+                const: ai-rate-limiting-advanced
+            required:
+              - name

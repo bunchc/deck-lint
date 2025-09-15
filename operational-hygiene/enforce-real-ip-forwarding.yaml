@@ -1,0 +1,13 @@
+# Requires forwarding of the real client IP address from the load balancer to Kong.
+formats: ["kubernetes"]
+rules:
+  enforce-real-ip-forwarding:
+    description: "Ensures that trusted_ips is configured for Kong deployments."
+    message: "The KONG_TRUSTED_IPS environment variable must be set to forward the real client IP address."
+    severity: "error"
+    given: "$.spec.template.spec.containers[?(@.name == 'proxy')].env"
+    then:
+      field: "name"
+      function: "pattern"
+      functionOptions:
+        match: "KONG_TRUSTED_IPS"

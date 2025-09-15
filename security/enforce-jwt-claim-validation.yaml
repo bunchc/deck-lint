@@ -1,0 +1,21 @@
+# Kong Gateway Linting Rule: Enforce JWT Claim Validation
+# Description: This rule ensures that any JWT plugin is configured to validate
+# the expiration time ('exp') and 'not before' ('nbf') claims. Validating these
+# claims is critical for preventing token replay attacks and ensuring tokens
+# are not used outside their intended validity period.
+
+rules:
+  jwt-claims-validation:
+    description: "JWT plugins must validate 'exp' and 'nbf' claims."
+    message: "JWT plugin for consumer '{{value.consumer.id}}' must have 'config.claims_to_verify' containing 'exp' and 'nbf'."
+    given: "$.plugins[*]"
+    severity: "error"
+    then:
+      function: pattern
+      functionOptions:
+        match:
+          name: "jwt"
+          config:
+            claims_to_verify:
+              - "exp"
+              - "nbf"

@@ -1,0 +1,24 @@
+# Documentation: resilience-and-performance/recommend-passive-healthchecks.yaml
+#
+# This rule recommends the use of passive health checks for all upstream
+# services to supplement active health checks. Passive health checks monitor
+# the health of upstream services by analyzing the responses to live traffic.
+# If a service starts returning a high number of failures, it is marked as
+# unhealthy and traffic is no longer routed to it. This can help to detect
+# failures more quickly than active health checks, which only run periodically.
+#
+# The rule checks that each upstream has an 'healthchecks' property with the
+# 'passive' property defined.
+#
+# For more information on passive health checks, see:
+# - https://docs.konghq.com/gateway/latest/admin-api/upstreams/health-checks/
+
+rules:
+  recommend-passive-healthchecks:
+    description: "All upstream services should have passive health checks configured."
+    message: "Upstream '{{value.name}}' does not have passive health checks configured."
+    given: "$.upstreams[*]"
+    severity: warn
+    then:
+      field: healthchecks.passive
+      function: truthy

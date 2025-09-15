@@ -1,0 +1,19 @@
+#
+# Rule: No Wildcard Hosts
+#
+# Description: This rule prevents the use of wildcard hosts in routes.
+# Wildcard hosts can lead to overly broad request matching, potentially
+# exposing services to unintended traffic and creating security risks.
+#
+# Severity: warn
+#
+rules:
+  no-wildcard-hosts:
+    description: "Routes should not use wildcard hosts."
+    message: "Route '{{property}}' uses a wildcard host: '{{value}}'."
+    given: "$.routes[*].hosts[*]"
+    severity: warn
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: "\\*"

@@ -1,0 +1,11 @@
+rules:
+  disallow-unauthenticated-routes:
+    description: "All routes must have an authentication plugin enabled."
+    message: "Route '{{value.name}}' does not have any authentication plugin enabled. Please enable at least one authentication plugin (e.g., jwt, key-auth, oidc, basic-auth, hmac-auth, oauth2, mtls-auth)."
+    given: "$.routes[*]"
+    severity: "error"
+    then:
+      function: "pattern"
+      functionOptions:
+        match: "\\b(jwt|key-auth|oidc|basic-auth|hmac-auth|oauth2|mtls-auth)\\b"
+        property: "plugins.*.name"

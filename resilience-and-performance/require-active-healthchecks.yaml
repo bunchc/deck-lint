@@ -1,0 +1,24 @@
+# Documentation: resilience-and-performance/require-active-healthchecks.yaml
+#
+# This rule mandates that all upstream services have active health checks
+# configured. Active health checks periodically send requests to upstream
+# services to determine their health. If a service fails a health check, it is
+# marked as unhealthy and traffic is no longer routed to it. This ensures that
+# traffic is only routed to healthy instances, improving the reliability and
+# availability of the application.
+#
+# The rule checks that each upstream has an 'healthchecks' property with the
+# 'active' property defined.
+#
+# For more information on active health checks, see:
+# - https://docs.konghq.com/gateway/latest/admin-api/upstreams/health-checks/
+
+rules:
+  require-active-healthchecks:
+    description: "All upstream services must have active health checks configured."
+    message: "Upstream '{{value.name}}' does not have active health checks configured."
+    given: "$.upstreams[*]"
+    severity: error
+    then:
+      field: healthchecks.active
+      function: truthy

@@ -1,0 +1,15 @@
+# Enforces explicit service and route matching to prevent Kong from acting as an open proxy.
+formats: ["kubernetes"]
+rules:
+  prevent-open-proxies:
+    description: "Ensures that all routes have explicit matching criteria."
+    message: "Routes must have at least one of 'hosts', 'paths', or 'methods' defined to prevent open proxies."
+    severity: "error"
+    given: "$.spec"
+    then:
+      function: "xor"
+      functionOptions:
+        properties:
+          - "hosts"
+          - "paths"
+          - "methods"

@@ -1,0 +1,18 @@
+# Kong Gateway Linting Rule: Require IP Restrictions for Admin API
+# Description: This rule ensures that the Kong Admin API is protected by the
+# 'ip-restriction' plugin. The Admin API provides full control over the gateway,
+# and restricting access to a trusted set of IP addresses is a critical
+# security measure.
+
+rules:
+  admin-api-require-ip-restriction:
+    description: "The Admin API must be protected by the 'ip-restriction' plugin."
+    message: "Service '{{value.name}}' targets the Admin API and must have the 'ip-restriction' plugin enabled."
+    given: "$.services[?(@.tags[*] == 'admin-api')]"
+    severity: "error"
+    then:
+      field: "plugins"
+      function: pattern
+      functionOptions:
+        match:
+          name: "ip-restriction"

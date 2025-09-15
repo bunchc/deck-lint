@@ -1,0 +1,41 @@
+#
+# Rule: Disallow Insecure Admin API
+#
+# Description: This rule flags Admin API routes that are not secured with TLS
+# and an authentication plugin. Exposing the Admin API without these security
+# measures is a significant risk, as it could allow unauthorized users to gain
+# full control over the Kong Gateway.
+#
+# Severity: error
+#
+rules:
+  insecure-admin-api:
+    description: "Admin API routes must use TLS and have an authentication plugin."
+    message: "Admin API route '{{property}}' is insecure. It must use 'https' and have an auth plugin."
+    given: "$.routes[?(@.name === 'admin-api')]"
+    severity: error
+    then:
+      - function: schema
+        functionOptions:
+          schema:
+            type: object
+            properties:
+              protocols:
+                type: array
+                contains:
+                  const: https
+              plugins:
+                type: object
+                properties:
+                  key-auth:
+                    type: object
+                  jwt:
+                    type: object
+                  basic-auth:
+                    type: object
+                  oauth2:
+                    type: object
+                minProperties: 1
+            required:
+              - protocols
+              - plugins

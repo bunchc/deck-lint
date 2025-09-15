@@ -1,0 +1,19 @@
+# Documentation: require-log-sanitization
+#
+# This rule recommends configuring log sanitization to prevent the
+# leakage of sensitive information. Log sanitization is a critical
+# security measure that helps to protect sensitive data from being
+# exposed in logs.
+#
+# For more information, see the Kong documentation on the logging plugins:
+# https://docs.konghq.com/hub/
+#
+rules:
+  require-log-sanitization:
+    description: "Recommends configuring log sanitization to prevent the leakage of sensitive information."
+    message: "Consider configuring log sanitization to prevent the leakage of sensitive information."
+    given: "$.plugins[?(@.name.match(/log/))].config"
+    severity: "warn"
+    then:
+      - field: "redact"
+        function: "truthy"

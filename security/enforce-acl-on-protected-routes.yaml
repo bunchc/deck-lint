@@ -1,0 +1,14 @@
+rules:
+  enforce-acl-on-protected-routes:
+    description: "All routes tagged as 'protected' must have the ACL plugin enabled."
+    message: "Route is tagged as 'protected' but does not have the ACL plugin enabled."
+    given: "$.routes[*]"
+    then:
+      - field: tags
+        function: pattern
+        functionOptions:
+          match: "protected"
+      - field: plugins
+        function: pattern
+        functionOptions:
+          match: "acl"

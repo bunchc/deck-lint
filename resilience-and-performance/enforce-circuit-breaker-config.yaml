@@ -1,0 +1,29 @@
+# Documentation: resilience-and-performance/enforce-circuit-breaker-config.yaml
+#
+# This rule ensures that all services have a circuit breaker plugin configured
+# to prevent cascading failures. Circuit breakers monitor requests to a service
+# and trip if the failure rate exceeds a configured threshold. Once tripped,
+# subsequent requests to the service will fail fast, preventing the application
+# from waiting for a response from an unhealthy service. This helps to isolate
+# failures and prevent them from cascading to other services.
+#
+# The rule checks that each service has at least one plugin with the name
+# 'circuit-breaker' or 'circuit-breaker-advanced'.
+#
+# For more information on circuit breakers, see:
+# - https://docs.konghq.com/hub/kong-inc/circuit-breaker/
+# - https://martinfowler.com/bliki/CircuitBreaker.html
+
+rules:
+  enforce-circuit-breaker-config:
+    description: "All services must have a circuit breaker plugin configured."
+    message: "Service '{{value.name}}' does not have a circuit breaker plugin configured."
+    given: "$.services[*]"
+    severity: error
+    then:
+      function: pattern
+      functionOptions:
+        match:
+          plugins:
+            - name: "circuit-breaker"
+            - name: "circuit-breaker-advanced"

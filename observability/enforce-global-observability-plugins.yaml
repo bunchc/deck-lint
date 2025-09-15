@@ -1,0 +1,72 @@
+# Documentation: enforce-global-observability-plugins
+#
+# This rule verifies that key observability plugins (Prometheus, OpenTelemetry,
+# and a logging plugin) are applied globally. Applying these plugins globally
+# ensures that all services and routes are monitored and traced by default.
+#
+# For more information, see the Kong documentation on global plugins:
+# https://docs.konghq.com/gateway/latest/admin-api/#global-plugins
+#
+rules:
+  enforce-global-prometheus-plugin:
+    description: "Verifies that the Prometheus plugin is applied globally."
+    message: "The Prometheus plugin should be applied globally to ensure all services are monitored."
+    given: "$.plugins[?(@.name == 'prometheus')]"
+    severity: "error"
+    then:
+      - function: "schema"
+        functionOptions:
+          schema:
+            type: "array"
+            minItems: 1
+            items:
+              type: "object"
+              properties:
+                service:
+                  function: "undefined"
+                route:
+                  function: "undefined"
+                consumer:
+                  function: "undefined"
+
+  enforce-global-opentelemetry-plugin:
+    description: "Verifies that the OpenTelemetry plugin is applied globally."
+    message: "The OpenTelemetry plugin should be applied globally to ensure all services are traced."
+    given: "$.plugins[?(@.name == 'opentelemetry')]"
+    severity: "error"
+    then:
+      - function: "schema"
+        functionOptions:
+          schema:
+            type: "array"
+            minItems: 1
+            items:
+              type: "object"
+              properties:
+                service:
+                  function: "undefined"
+                route:
+                  function: "undefined"
+                consumer:
+                  function: "undefined"
+
+  enforce-global-logging-plugin:
+    description: "Verifies that a logging plugin is applied globally."
+    message: "A logging plugin should be applied globally to ensure all requests are logged."
+    given: "$.plugins[?(@.name.match(/log/))]"
+    severity: "error"
+    then:
+      - function: "schema"
+        functionOptions:
+          schema:
+            type: "array"
+            minItems: 1
+            items:
+              type: "object"
+              properties:
+                service:
+                  function: "undefined"
+                route:
+                  function: "undefined"
+                consumer:
+                  function: "undefined"

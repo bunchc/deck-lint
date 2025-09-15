@@ -1,0 +1,21 @@
+# Documentation: require-explicit-api-versioning
+#
+# Mandates that all route paths must contain a version identifier (e.g., `/v1/`).
+# Explicit API versioning is crucial for clear API lifecycle management, as it
+# allows consumers to pin to a specific version of an API and prevents breaking
+# changes from affecting existing integrations. This rule ensures that all
+# routes are versioned from the start.
+#
+# Example valid path: `/v1/users`, `/v2/products`
+# Example invalid path: `/users`, `/products`
+#
+rules:
+  require-explicit-api-versioning:
+    description: "All route paths must include a version identifier (e.g., '/v1/')."
+    message: "The route path '{{value}}' does not contain a version identifier. Please add a version prefix like '/v1/'."
+    given: "$.routes[*].paths[*]"
+    severity: "error"
+    then:
+      function: "pattern"
+      functionOptions:
+        match: "^/v\\d+/"

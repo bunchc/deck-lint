@@ -1,0 +1,19 @@
+# Kong Gateway Linting Rule: Require Secure Upstream TLS
+# Description: This rule ensures that any service using HTTPS for its upstream
+# connection has 'tls_verify' enabled and a 'ca_certificates' list configured.
+# This is critical for preventing man-in-the-middle (MITM) attacks by ensuring
+# the gateway only connects to trusted, verified upstream services.
+
+rules:
+  require-secure-upstream-tls:
+    description: "Services using HTTPS upstreams must have 'tls_verify' enabled and a trusted CA."
+    message: "Service '{{value.name}}' uses an HTTPS upstream and must have 'tls_verify' enabled and 'ca_certificates' configured."
+    given: "$.services[?(@.protocol == 'https')]"
+    severity: "error"
+    then:
+      function: pattern
+      functionOptions:
+        match:
+          tls_verify: true
+          ca_certificates:
+            - ".+"

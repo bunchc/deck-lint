@@ -1,0 +1,29 @@
+#
+# Rule: Require Standard Tags
+#
+# Description: This rule ensures that all services and routes are tagged with
+# 'team', 'env', and 'owner'. Standardized tagging is essential for cost
+# allocation, resource management, and accountability.
+#
+# Severity: error
+#
+rules:
+  require-standard-tags:
+    description: "Services and routes must have standard tags."
+    message: "Missing standard tags on {{property}}. Must include 'team', 'env', and 'owner'."
+    given: "$.services[*] | $.routes[*]"
+    severity: error
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          properties:
+            tags:
+              type: array
+              contains:
+                - team
+                - env
+                - owner
+          required:
+            - tags

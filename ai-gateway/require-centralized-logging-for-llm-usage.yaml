@@ -1,0 +1,29 @@
+# Documentation:
+# This rule mandates that a logging plugin is configured for all AI Gateway routes
+# to centralize LLM usage reporting. Centralized logging is essential for monitoring
+# LLM usage, tracking costs, and identifying potential security incidents.
+#
+# A logging plugin (e.g., `tcp-log`, `http-log`, `file-log`) ensures that all
+# request and response data is captured and sent to a centralized logging platform
+# for analysis and alerting. This rule checks for the presence of a logging plugin
+# on any route tagged with 'ai-gateway'.
+
+rules:
+  require-centralized-logging-for-llm-usage:
+    description: Mandates a logging plugin for all AI Gateway routes.
+    message: "AI Gateway routes must have a logging plugin configured for centralized LLM usage reporting."
+    given: "$.routes[?(@.tags && @.tags.includes('ai-gateway'))]"
+    severity: error
+    then:
+      field: plugins
+      function: schema
+      functionOptions:
+        schema:
+          type: array
+          contains:
+            type: object
+            properties:
+              name:
+                pattern: "(log|logging)$"
+            required:
+              - name

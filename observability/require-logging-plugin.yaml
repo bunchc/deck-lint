@@ -1,0 +1,30 @@
+#
+# Rule: Require Logging Plugin
+#
+# Description: This rule ensures that every service has a logging plugin
+# attached. Centralized logging is fundamental for observability, enabling
+# teams to monitor, debug, and audit API traffic effectively.
+#
+# Severity: error
+#
+rules:
+  require-logging-plugin:
+    description: "Every service must have a logging plugin attached."
+    message: "Service '{{property}}' does not have a logging plugin configured."
+    given: "$.services[*]"
+    severity: error
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          properties:
+            plugins:
+              type: object
+              oneOf:
+                - required: ["file-log"]
+                - required: ["tcp-log"]
+                - required: ["udp-log"]
+                - required: ["http-log"]
+          required:
+            - plugins

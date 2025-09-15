@@ -1,0 +1,14 @@
+rules:
+  require-response-filtering-for-pii:
+    description: "Routes tagged with 'pii' must use a response transformation plugin."
+    message: "The route '{{path}}' is tagged with 'pii' and must have a response transformation plugin enabled."
+    given: "$.routes[*]"
+    severity: "warn"
+    then:
+      function: "pattern"
+      functionOptions:
+        match:
+          tags:
+            - "pii"
+          plugins:
+            - "response-transformer"

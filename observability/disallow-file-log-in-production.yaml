@@ -1,0 +1,18 @@
+# Documentation: disallow-file-log-in-production
+#
+# This rule discourages the use of the `file-log` plugin in production
+# environments to promote centralized logging. Centralized logging is
+# a best practice for production environments, as it provides a single
+# place to collect, search, and analyze logs.
+#
+# For more information, see the Kong documentation:
+# https://docs.konghq.com/hub/kong-inc/file-log/
+#
+rules:
+  disallow-file-log-in-production:
+    description: "Discourages the use of the file-log plugin in production environments."
+    message: "The file-log plugin should not be used in production environments. Consider using a centralized logging solution instead."
+    given: "$.plugins[?(@.name == 'file-log')]"
+    severity: "warn"
+    then:
+      function: "falsy"

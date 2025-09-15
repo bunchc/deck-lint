@@ -1,0 +1,28 @@
+# Documentation:
+# This rule mandates that an ACL plugin is applied to all MCP (Model Composition Pipelines)
+# routes to restrict access to authorized consumer groups. MCP routes often handle sensitive
+# data and complex workflows, making access control a critical security requirement.
+#
+# The ACL plugin ensures that only consumers belonging to a specified allowlist can
+# access the route, preventing unauthorized access and potential misuse. This rule
+# checks for the presence of the 'acl' plugin on any route that is tagged with 'mcp'.
+
+rules:
+  require-ai-acl-on-mcp-routes:
+    description: Mandates an ACL plugin on all MCP routes.
+    message: "MCP routes must be protected with an ACL plugin."
+    given: "$.routes[?(@.tags && @.tags.includes('mcp'))]"
+    severity: error
+    then:
+      field: plugins
+      function: schema
+      functionOptions:
+        schema:
+          type: array
+          contains:
+            type: object
+            properties:
+              name:
+                const: acl
+            required:
+              - name

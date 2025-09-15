@@ -1,0 +1,12 @@
+# Discourages the use of KongClusterPlugin as a global configuration mechanism in Gateway API environments to prevent unintended side effects.
+formats: ["kubernetes"]
+rules:
+  avoid-kongclusterplugin:
+    description: "Discourages the use of KongClusterPlugin in Gateway API environments."
+    message: "Avoid using KongClusterPlugin in Gateway API environments. Prefer annotations on HTTPRoute resources for more explicit plugin scoping."
+    severity: "warn"
+    given: "$.kind"
+    then:
+      function: "pattern"
+      functionOptions:
+        notMatch: "KongClusterPlugin"

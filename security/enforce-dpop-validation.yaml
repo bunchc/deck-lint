@@ -1,0 +1,15 @@
+# Kong Gateway Linting Rule: Enforce DPoP Validation for OIDC
+# Description: This rule requires that the OIDC plugin is configured to
+# enable DPoP (Demonstration of Proof-of-Possession) validation. DPoP is a
+# security mechanism that helps prevent token theft by cryptographically
+# binding tokens to a specific client.
+
+rules:
+  oidc-enforce-dpop-validation:
+    description: "OIDC plugins must have DPoP validation enabled."
+    message: "OIDC plugin must have 'config.dpop_validate' set to true."
+    given: "$.plugins[?(@.name == 'oidc')].config"
+    severity: "error"
+    then:
+      field: "dpop_validate"
+      function: truthy

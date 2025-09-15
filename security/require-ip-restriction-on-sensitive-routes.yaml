@@ -1,0 +1,26 @@
+rules:
+  require-ip-restriction-on-sensitive-routes:
+    description: "Routes tagged as 'sensitive' or 'internal' must have the ip-restriction plugin."
+    message: "Route is tagged as '{{value.tags}}' but does not have the ip-restriction plugin."
+    given: "$.routes[*]"
+    severity: "warn"
+    then:
+      function: "cody-and-should-not-have-property"
+      functionOptions:
+        property: "plugins"
+        subObject:
+          name: "ip-restriction"
+        subObjectInArray: true
+        conditions:
+          - if:
+              function: "cody-and-has-property"
+              functionOptions:
+                property: "tags"
+                subObject: "sensitive"
+                subObjectInArray: true
+          - if:
+              function: "cody-and-has-property"
+              functionOptions:
+                property: "tags"
+                subObject: "internal"
+                subObjectInArray: true

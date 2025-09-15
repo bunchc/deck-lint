@@ -1,0 +1,19 @@
+#
+# Rule: Enforce Service Naming Convention
+#
+# Description: This rule enforces a consistent naming convention for all
+# services, such as 'team-app-env'. A standardized naming scheme improves
+# clarity and makes it easier to identify and manage services.
+#
+# Severity: warn
+#
+rules:
+  service-naming-convention:
+    description: "Services must follow the 'team-app-env' naming convention."
+    message: "Service name '{{value}}' does not match the required 'team-app-env' format."
+    given: "$.services[*].name"
+    severity: warn
+    then:
+      function: pattern
+      functionOptions:
+        match: "^[a-z0-9]+(-[a-z0-9]+){2}$"

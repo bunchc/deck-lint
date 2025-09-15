@@ -1,0 +1,17 @@
+# Kong Gateway Linting Rule: Disallow HTTP for OIDC Issuer
+# Description: This rule ensures that the OpenID Connect (OIDC) plugin is
+# configured with an issuer endpoint that uses HTTPS. Using HTTP is insecure
+# as it transmits sensitive authentication data in cleartext, making it
+# vulnerable to interception.
+
+rules:
+  oidc-disallow-http-issuer:
+    description: "OIDC plugin issuer endpoint must use HTTPS."
+    message: "OIDC plugin issuer '{{value.config.issuer}}' must use HTTPS."
+    given: "$.plugins[?(@.name == 'oidc')]"
+    severity: "error"
+    then:
+      field: "config.issuer"
+      function: pattern
+      functionOptions:
+        notMatch: "^http://"

@@ -1,0 +1,36 @@
+#
+# Rule: Enforce Prompt Sanitization
+#
+# Description: This rule ensures that AI prompt plugins are configured to
+# sanitize inputs. Prompt injection is a significant security risk for LLM-
+# based applications, and sanitizing inputs is a critical defense mechanism.
+#
+# Severity: error
+#
+rules:
+  enforce-prompt-sanitization:
+    description: "AI prompt plugins must be configured to sanitize inputs."
+    message: "AI prompt plugin for '{{property}}' is not configured for input sanitization."
+    given: "$.plugins[?(@.name === 'ai-prompt-decorator')].config"
+    severity: error
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          properties:
+            prompts:
+              type: object
+              properties:
+                prepend:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      content:
+                        type: string
+                        pattern: "sanitize"
+                    required:
+                      - content
+          required:
+            - prompts

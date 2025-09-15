@@ -1,0 +1,18 @@
+# Documentation:
+# This rule ensures that any self-hosted LLM model specifies a valid `upstream_url`.
+# When using self-hosted models, the AI Proxy plugin needs a clear upstream target
+# to route requests to. Failing to provide an `upstream_url` can lead to routing
+# failures and service unavailability.
+#
+# This rule targets AI Proxy plugin instances where the model provider is set to
+# 'self-hosted' and verifies that the `upstream_url` field is defined and not empty.
+
+rules:
+  disallow-unspecified-upstream-for-self-hosted-llms:
+    description: Ensures self-hosted LLM models specify a valid `upstream_url`.
+    message: "Self-hosted LLM models must specify a valid `upstream_url`."
+    given: "$.plugins[?(@.name == 'ai-proxy' && @.config.model.provider == 'self-hosted')].config"
+    severity: error
+    then:
+      field: upstream_url
+      function: truthy

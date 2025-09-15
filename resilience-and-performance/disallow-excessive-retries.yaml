@@ -1,0 +1,21 @@
+#
+# Rule: Disallow Excessive Retries
+#
+# Description: This rule prevents configuring more than 3 retries on a
+# service. While retries can help overcome transient failures, excessive
+# retries can lead to cascading failures and overwhelm upstream services.
+#
+# Severity: warn
+#
+rules:
+  disallow-excessive-retries:
+    description: "The number of retries should not exceed 3."
+    message: "Service '{{property}}' is configured with {{value}} retries, which is more than the allowed 3."
+    given: "$.services[*].retries"
+    severity: warn
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: integer
+          maximum: 3

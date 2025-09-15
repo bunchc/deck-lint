@@ -1,0 +1,15 @@
+# Kong Gateway Linting Rule: Disallow Insecure key-auth Plugin
+# Description: This rule flags the use of the 'key-auth' plugin, which stores
+# API keys in plaintext. It is recommended to use the 'key-auth-enc' plugin
+# with Kong Keyring to ensure that API keys are encrypted at rest.
+
+rules:
+  disallow-key-auth-insecure:
+    description: "The 'key-auth' plugin is disallowed. Use 'key-auth-enc' with Kong Keyring instead."
+    message: "The 'key-auth' plugin is insecure. Use 'key-auth-enc' with Kong Keyring for encrypted API keys."
+    given: "$.plugins[*].name"
+    severity: "error"
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: "^key-auth$"

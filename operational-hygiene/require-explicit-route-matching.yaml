@@ -1,0 +1,24 @@
+#
+# Rule: Require Explicit Route Matching
+#
+# Description: This rule ensures that routes have specific matching criteria,
+# such as hosts, paths, or methods. Vague or missing matching criteria can
+# lead to unpredictable routing behavior and make the gateway difficult to manage.
+#
+# Severity: error
+#
+rules:
+  require-explicit-route-matching:
+    description: "Routes must have explicit matching criteria."
+    message: "Route '{{property}}' lacks specific matching criteria (e.g., hosts, paths, methods)."
+    given: "$.routes[*]"
+    severity: error
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          oneOf:
+            - required: ["hosts"]
+            - required: ["paths"]
+            - required: ["methods"]

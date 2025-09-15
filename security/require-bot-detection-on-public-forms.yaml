@@ -1,0 +1,21 @@
+rules:
+  require-bot-detection-on-public-forms:
+    description: "Routes tagged as 'public-form' or 'sensitive-flow' must have the bot-detection plugin enabled."
+    message: "Route with tag 'public-form' or 'sensitive-flow' must have bot-detection plugin enabled."
+    given: "$.services[*].routes[*]"
+    severity: warn
+    then:
+      function: script
+      options:
+        source: |
+          const route = value;
+          const tags = route.tags || [];
+          if (tags.includes('public-form') || tags.includes('sensitive-flow')) {
+            const plugins = route.plugins || [];
+            if (!plugins.some(p => p.name === 'bot-detection' && (p.enabled === undefined || p.enabled))) {
+              return [{
+                message: `Route '${route.name}' is tagged as '${tags.find(t => t === 'public-form' || t === 'sensitive-flow')}' but does not have the bot-detection plugin enabled.`
+              }];
+            }
+          }
+          return [];

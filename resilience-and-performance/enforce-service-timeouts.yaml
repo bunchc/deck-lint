@@ -1,0 +1,27 @@
+# Documentation: resilience-and-performance/enforce-service-timeouts.yaml
+#
+# This rule ensures that all services have `connect_timeout`, `read_timeout`,
+# and `write_timeout` properties configured. Timeouts are a critical aspect of
+# resilience, as they prevent resource exhaustion by ensuring that the
+# application does not wait indefinitely for a response from an upstream
+# service.
+#
+# The rule checks that each service has the `connect_timeout`, `read_timeout`,
+# and `write_timeout` properties defined.
+#
+# For more information on service timeouts, see:
+# - https://docs.konghq.com/gateway/latest/admin-api/services/
+
+rules:
+  enforce-service-timeouts:
+    description: "All services must have timeouts configured."
+    message: "Service '{{value.name}}' does not have timeouts configured."
+    given: "$.services[*]"
+    severity: error
+    then:
+      - field: connect_timeout
+        function: truthy
+      - field: read_timeout
+        function: truthy
+      - field: write_timeout
+        function: truthy

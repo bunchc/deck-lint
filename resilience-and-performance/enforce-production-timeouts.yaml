@@ -1,0 +1,38 @@
+#
+# Rule: Enforce Production Timeouts
+#
+# Description: This rule validates that 'connect_timeout', 'read_timeout', and
+# 'write_timeout' are set to reasonable values for production environments.
+# Properly configured timeouts are crucial for preventing long-running
+# requests from consuming excessive resources and impacting system stability.
+#
+# Severity: error
+#
+rules:
+  enforce-production-timeouts:
+    description: "Service timeouts must be set to reasonable production values."
+    message: "Timeout '{{property}}' on service '{{path}}' is set to {{value}}, which is outside the recommended range."
+    given: "$.services[*]"
+    severity: error
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          properties:
+            connect_timeout:
+              type: integer
+              minimum: 1000
+              maximum: 60000
+            read_timeout:
+              type: integer
+              minimum: 1000
+              maximum: 60000
+            write_timeout:
+              type: integer
+              minimum: 1000
+              maximum: 60000
+          required:
+            - connect_timeout
+            - read_timeout
+            - write_timeout

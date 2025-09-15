@@ -1,0 +1,23 @@
+# Documentation: enforce-deprecation-tagging
+#
+# Requires that any service or route marked as deprecated includes a `deprecated`
+# tag and a `sunset-YYYY-MM-DD` tag. This ensures that deprecated resources are
+# clearly identified and have a defined end-of-life date, which is critical for
+# communicating changes to consumers and planning migrations.
+#
+rules:
+  enforce-deprecation-tagging:
+    description: "Deprecated services and routes must have 'deprecated' and 'sunset-YYYY-MM-DD' tags."
+    message: "The resource is marked as deprecated but is missing the required 'deprecated' or 'sunset-YYYY-MM-DD' tag."
+    given: "$..[?(@.tags && @.tags.includes('deprecated'))]"
+    severity: "warn"
+    then:
+      - function: "schema"
+        functionOptions:
+          schema:
+            type: "object"
+            properties:
+              tags:
+                type: "array"
+                contains:
+                  pattern: "^sunset-\\d{4}-\\d{2}-\\d{2}$"

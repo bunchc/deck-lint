@@ -1,0 +1,16 @@
+# Kong Gateway Linting Rule: Enforce HTTPS for All Connections
+# Description: This rule ensures that all routes are configured to use the
+# 'https' protocol. Encrypting all client-facing communication is a
+# fundamental security best practice to protect data in transit.
+
+rules:
+  enforce-https-for-all-routes:
+    description: "All routes must use the 'https' protocol."
+    message: "Route '{{value.name}}' must include 'https' in its 'protocols' list."
+    given: "$.routes[*]"
+    severity: "error"
+    then:
+      field: "protocols"
+      function: pattern
+      functionOptions:
+        match: "https"

@@ -1,0 +1,28 @@
+# Documentation:
+# This rule ensures that the AI Prompt Guard plugin is enabled on all AI Gateway routes
+# to block harmful or unsafe prompts. Protecting against prompt injection, and other
+# adversarial inputs is critical for maintaining the security and integrity of LLMs.
+#
+# The AI Prompt Guard plugin analyzes incoming prompts and rejects any that contain
+# patterns associated with known attack vectors. This rule verifies that the
+# 'ai-prompt-guard' plugin is present on all routes tagged with 'ai-gateway'.
+
+rules:
+  require-ai-prompt-guard:
+    description: Ensures the AI Prompt Guard plugin is enabled on all AI Gateway routes.
+    message: "AI Gateway routes must be protected with the 'ai-prompt-guard' plugin."
+    given: "$.routes[?(@.tags && @.tags.includes('ai-gateway'))]"
+    severity: error
+    then:
+      field: plugins
+      function: schema
+      functionOptions:
+        schema:
+          type: array
+          contains:
+            type: object
+            properties:
+              name:
+                const: ai-prompt-guard
+            required:
+              - name

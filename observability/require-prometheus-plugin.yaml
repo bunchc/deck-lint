@@ -1,0 +1,27 @@
+# Documentation: require-prometheus-plugin
+#
+# This rule ensures that the Prometheus plugin is enabled to expose
+# metrics for monitoring. The Prometheus plugin is essential for
+# collecting metrics and integrating with a Prometheus monitoring system.
+#
+# For more information, see the Kong documentation:
+# https://docs.konghq.com/hub/kong-inc/prometheus/
+#
+rules:
+  require-prometheus-plugin:
+    description: "Ensures that the Prometheus plugin is enabled."
+    message: "The Prometheus plugin must be enabled to expose metrics for monitoring."
+    given: "$.plugins"
+    severity: "error"
+    then:
+      - function: "schema"
+        functionOptions:
+          schema:
+            type: "array"
+            contains:
+              type: "object"
+              properties:
+                name:
+                  const: "prometheus"
+              required:
+                - "name"

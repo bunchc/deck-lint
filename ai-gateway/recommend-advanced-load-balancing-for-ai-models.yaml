@@ -1,0 +1,19 @@
+# Documentation:
+# This rule recommends using an advanced load balancing strategy for routes with
+# multiple AI models. Simple load balancing algorithms like round-robin may not be
+# optimal for AI workloads, where performance can vary based on model complexity
+# and resource availability.
+#
+# Advanced load balancing strategies, such as `lowest-latency` or `semantic`, can
+# route requests more intelligently, improving performance and resource utilization.
+# This rule checks for services with multiple upstream targets and recommends using
+# an advanced load balancing algorithm if a basic one is configured.
+
+rules:
+  recommend-advanced-load-balancing-for-ai-models:
+    description: Recommends advanced load balancing for routes with multiple AI models.
+    message: "Consider using an advanced load balancing strategy (e.g., 'lowest-latency', 'semantic') for routes with multiple AI models."
+    given: "$.services[?(@.targets.length > 1 && @.algorithm IN ['round-robin', 'consistent-hashing'])]"
+    severity: warn
+    then:
+      function: truthy

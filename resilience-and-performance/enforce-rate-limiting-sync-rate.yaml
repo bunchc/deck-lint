@@ -1,0 +1,27 @@
+# Documentation: resilience-and-performance/enforce-rate-limiting-sync-rate.yaml
+#
+# This rule enforces a minimum `sync_rate` of 1 second for the
+# `rate-limiting-advanced` and `service-protection` plugins. These plugins use
+# Redis to synchronize rate limiting data across multiple nodes. A low
+# `sync_rate` can cause excessive load on Redis, potentially impacting the
+# performance and reliability of the application.
+#
+# The rule checks that any plugin with the name 'rate-limiting-advanced' or
+# 'service-protection' has a `sync_rate` of at least 1.
+#
+# For more information on the `rate-limiting-advanced` plugin, see:
+# - https://docs.konghq.com/hub/kong-inc/rate-limiting-advanced/
+
+rules:
+  enforce-rate-limiting-sync-rate:
+    description: "The `sync_rate` for rate limiting plugins must be at least 1 second."
+    message: "Plugin '{{value.name}}' has a `sync_rate` of less than 1 second."
+    given: "$.plugins[?(@.name === 'rate-limiting-advanced' || @.name === 'service-protection')]"
+    severity: error
+    then:
+      field: config.sync_rate
+      function: "schema"
+      functionOptions:
+        schema:
+          type: "number"
+          minimum: 1

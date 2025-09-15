@@ -1,0 +1,26 @@
+# Documentation: require-mandatory-resource-tags
+#
+# Enforces that all services, routes, and plugins include a standard set of
+# tags (e.g., `team:`, `env:`, `owner:`) for ownership and traceability.
+# Mandatory tags are essential for effective cost allocation, access control,
+# and incident response. This rule helps maintain a consistent and auditable
+# inventory of all resources.
+#
+rules:
+  require-mandatory-resource-tags:
+    description: "Services, routes, and plugins must include 'team', 'env', and 'owner' tags."
+    message: "The resource is missing one or more mandatory tags (team, env, owner). Found tags: {{value}}."
+    given: "$..[?(@.tags)]"
+    severity: "error"
+    then:
+      - function: "schema"
+        functionOptions:
+          schema:
+            type: "object"
+            properties:
+              tags:
+                type: "array"
+                contains:
+                  - pattern: "^team:"
+                  - pattern: "^env:"
+                  - pattern: "^owner:"

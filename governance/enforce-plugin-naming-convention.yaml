@@ -1,0 +1,21 @@
+# Documentation: enforce-plugin-naming-convention
+#
+# Ensures that custom plugin names adhere to the standardized
+# `<plugin-base-name>-<major>v<minor>` format for proper versioning.
+# This convention helps in identifying the plugin's functionality and version
+# at a glance, preventing compatibility issues and ensuring consistent
+# deployment across different environments.
+#
+# Example valid name: `custom-auth-2v1`
+# Example invalid name: `my-plugin`, `custom-auth-v2.1`
+#
+rules:
+  enforce-plugin-naming-convention:
+    description: "Custom plugin names must follow the '<plugin-base-name>-<major>v<minor>' format."
+    message: "The plugin name '{{value}}' is not compliant. Please use the format: <plugin-base-name>-<major>v<minor> (e.g., 'custom-auth-2v1')."
+    given: "$.plugins[*].name"
+    severity: "warn"
+    then:
+      function: "pattern"
+      functionOptions:
+        match: "^[a-z0-9]+(?:-[a-z0-9]+)*-\\d+v\\d+$"

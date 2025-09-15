@@ -1,0 +1,39 @@
+#
+# Rule: Require Health Checks for Upstreams
+#
+# Description: This rule ensures that all upstream services have active health
+# checks configured. Health checks are vital for resilience, as they allow the
+# gateway to detect and route traffic away from unhealthy upstream instances,
+# preventing service disruptions.
+#
+# Severity: error
+#
+rules:
+  require-healthchecks:
+    description: "All services must have active health checks configured."
+    message: "Service '{{property}}' does not have active health checks enabled."
+    given: "$.services[*]"
+    severity: error
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          properties:
+            healthchecks:
+              type: object
+              properties:
+                active:
+                  type: object
+                  properties:
+                    healthy:
+                      type: object
+                    unhealthy:
+                      type: object
+                  required:
+                    - healthy
+                    - unhealthy
+              required:
+                - active
+          required:
+            - healthchecks

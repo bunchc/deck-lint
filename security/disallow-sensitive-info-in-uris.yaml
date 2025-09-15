@@ -1,0 +1,16 @@
+# Kong Gateway Linting Rule: Disallow Sensitive Information in URIs
+# Description: This rule scans for common sensitive patterns (e.g., 'api_key',
+# 'token', 'password') in the URI paths of routes. Exposing sensitive data in
+# URIs is a significant security risk, as URLs are often logged and can be
+# easily compromised.
+
+rules:
+  disallow-sensitive-info-in-uris:
+    description: "URI paths must not contain sensitive information like API keys or tokens."
+    message: "Route '{{value.name}}' has a URI path that appears to contain sensitive information: '{{value.paths}}'."
+    given: "$.routes[*].paths[*]"
+    severity: "error"
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: "(api_key|token|password|secret)"

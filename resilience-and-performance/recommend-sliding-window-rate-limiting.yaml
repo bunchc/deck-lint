@@ -1,0 +1,25 @@
+# Documentation: resilience-and-performance/recommend-sliding-window-rate-limiting.yaml
+#
+# This rule recommends the use of the sliding window algorithm for rate
+# limiting to ensure stricter enforcement. The sliding window algorithm is more
+# accurate than the default fixed window algorithm, as it does not suffer from
+# the "bursty" traffic issue that can occur at the boundaries of a fixed
+# window.
+#
+# The rule checks that any plugin with the name 'rate-limiting' or
+# 'rate-limiting-advanced' has the `strategy` property set to 'sliding'.
+#
+# For more information on the sliding window algorithm, see:
+# - https://konghq.com/blog/how-to-design-a-scalable-rate-limiting-algorithm
+
+rules:
+  recommend-sliding-window-rate-limiting:
+    description: "The sliding window algorithm should be used for rate limiting."
+    message: "Plugin '{{value.name}}' is not using the sliding window algorithm."
+    given: "$.plugins[?(@.name === 'rate-limiting' || @.name === 'rate-limiting-advanced')]"
+    severity: warn
+    then:
+      field: config.strategy
+      function: pattern
+      functionOptions:
+        match: "sliding"

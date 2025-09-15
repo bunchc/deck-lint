@@ -1,0 +1,30 @@
+# Documentation: resilience-and-performance/enforce-dp-timeout-resilience.yaml
+#
+# This rule ensures that `cluster_control_plane_timeout` and
+# `cluster_data_plane_purge_delay` are configured for data planes in hybrid
+# mode. These settings are critical for ensuring resilience during control
+# plane outages.
+#
+# The `cluster_control_plane_timeout` setting defines how long a data plane
+# will wait for a response from the control plane before considering it
+# unavailable. The `cluster_data_plane_purge_delay` setting defines how long a
+# data plane will wait before purging its configuration cache after losing
+# connectivity with the control plane.
+#
+# The rule checks that the top-level `cluster_control_plane_timeout` and
+# `cluster_data_plane_purge_delay` properties are defined.
+#
+# For more information on hybrid mode resilience, see:
+# - https://docs.konghq.com/gateway/latest/plan-and-deploy/hybrid-mode/
+
+rules:
+  enforce-dp-timeout-resilience:
+    description: "Data planes in hybrid mode must have timeout resilience settings configured."
+    message: "Data plane timeout resilience settings are not configured."
+    given: "$"
+    severity: error
+    then:
+      - field: cluster_control_plane_timeout
+        function: truthy
+      - field: cluster_data_plane_purge_delay
+        function: truthy

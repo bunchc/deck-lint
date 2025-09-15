@@ -1,0 +1,25 @@
+# Documentation: resilience-and-performance/disallow-excessive-service-retries.yaml
+#
+# This rule limits the number of retries for a service to a maximum of 2.
+# Retries can be a useful mechanism for handling transient failures, but
+# excessive retries can overwhelm upstream services and lead to cascading
+# failures.
+#
+# The rule checks that each service has a `retries` property of no more than 2.
+#
+# For more information on service retries, see:
+# - https://docs.konghq.com/gateway/latest/admin-api/services/
+
+rules:
+  disallow-excessive-service-retries:
+    description: "The number of retries for a service must not exceed 2."
+    message: "Service '{{value.name}}' has more than 2 retries configured."
+    given: "$.services[*]"
+    severity: error
+    then:
+      field: retries
+      function: "schema"
+      functionOptions:
+        schema:
+          type: "integer"
+          maximum: 2

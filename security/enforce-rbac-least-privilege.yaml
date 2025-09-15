@@ -1,0 +1,20 @@
+#
+# Rule: Enforce RBAC Least Privilege
+#
+# Description: This rule warns if a consumer is assigned a role that is overly
+# permissive, such as 'super-admin'. Adhering to the principle of least
+# privilege is crucial for minimizing the potential impact of a compromised
+# account.
+#
+# Severity: warn
+#
+rules:
+  rbac-least-privilege:
+    description: "Consumers should not have overly permissive roles."
+    message: "Consumer '{{property}}' has a privileged role ('{{value}}') which should be reviewed."
+    given: "$.consumers[*].roles[*]"
+    severity: warn
+    then:
+      function: pattern
+      functionOptions:
+        notMatch: "super-admin"

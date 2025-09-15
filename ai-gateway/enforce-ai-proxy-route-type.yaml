@@ -1,0 +1,24 @@
+# Documentation:
+# This rule ensures that every AI Proxy plugin is configured with a valid `route_type`
+# to standardize request and response formats. A valid `route_type` is essential for
+# ensuring that the AI Gateway can correctly interpret and handle the data streams
+# for different AI models and providers.
+#
+# The `route_type` must be one of the following values:
+# - `llm/v1/chat`
+# - `llm/v1/completions`
+# - `llm/v1/embeddings`
+#
+# Failure to specify a valid `route_type` can result in processing errors,
+# incorrect request/response handling, and difficulties in monitoring and logging.
+
+rules:
+  enforce-ai-proxy-route-type:
+    description: Ensures every AI Proxy plugin has a valid `route_type`.
+    message: "AI Proxy plugin must have a valid `route_type` ('llm/v1/chat', 'llm/v1/completions', or 'llm/v1/embeddings')."
+    given: "$.plugins[?(@.name == 'ai-proxy')].config"
+    severity: error
+    then:
+      function: pattern
+      functionOptions:
+        match: "^(llm/v1/chat|llm/v1/completions|llm/v1/embeddings)$"

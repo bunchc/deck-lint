@@ -1,0 +1,16 @@
+# Mandates a default catch-all route to safely handle unmatched requests.
+formats: ["kubernetes"]
+rules:
+  require-catch-all-route:
+    description: "Ensures that a default catch-all route is defined."
+    message: "A default catch-all route with path '/' and priority 0 must be defined to handle unmatched requests."
+    severity: "warn"
+    given: "$[?(@.kind == 'Route')]"
+    then:
+      function: "some"
+      functionOptions:
+        pattern:
+          spec:
+            paths:
+              - "/"
+            priority: 0

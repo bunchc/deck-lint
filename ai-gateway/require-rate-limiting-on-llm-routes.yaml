@@ -1,0 +1,30 @@
+#
+# Rule: Require Rate Limiting on LLM Routes
+#
+# Description: This rule ensures that any route using an AI plugin also has a
+# corresponding AI rate-limiting plugin. Given the resource-intensive nature
+# of LLM requests, rate limiting is essential to prevent abuse and control costs.
+#
+# Severity: error
+#
+rules:
+  require-rate-limiting-on-llm-routes:
+    description: "Routes with an AI plugin must have an AI rate-limiting plugin."
+    message: "Route '{{property}}' uses an AI plugin but lacks an AI rate-limiting plugin."
+    given: "$.routes[?(@.plugins.ai-proxy)]"
+    severity: error
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          properties:
+            plugins:
+              type: object
+              properties:
+                ai-rate-limiting:
+                  type: object
+              required:
+                - ai-rate-limiting
+          required:
+            - plugins

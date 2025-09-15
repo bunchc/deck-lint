@@ -1,0 +1,32 @@
+#
+# Rule: Enforce OpenTelemetry Configuration
+#
+# Description: This rule validates the configuration of the OpenTelemetry
+# plugin to ensure that it is sending traces to a valid endpoint and using
+# the correct sampling rate. Consistent and correct OpenTelemetry
+# configuration is essential for distributed tracing.
+#
+# Severity: error
+#
+rules:
+  enforce-opentelemetry-config:
+    description: "OpenTelemetry plugin must be configured correctly."
+    message: "OpenTelemetry plugin for '{{property}}' has an invalid configuration."
+    given: "$.plugins[?(@.name === 'opentelemetry')].config"
+    severity: error
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          properties:
+            endpoint:
+              type: string
+              format: uri
+            sampling_rate:
+              type: number
+              minimum: 0.01
+              maximum: 1.0
+          required:
+            - endpoint
+            - sampling_rate

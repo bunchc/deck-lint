@@ -1,0 +1,30 @@
+#
+# Rule: Disallow Unauthenticated AI Proxy
+#
+# Description: This rule prevents AI proxy routes from being exposed without
+# an authentication plugin. Unauthenticated access to LLM services can lead
+# to significant abuse and cost overruns.
+#
+# Severity: error
+#
+rules:
+  disallow-unauthenticated-ai-proxy:
+    description: "AI proxy routes must have an authentication plugin."
+    message: "AI proxy route '{{property}}' does not have an authentication plugin."
+    given: "$.routes[?(@.plugins.ai-proxy)]"
+    severity: error
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          properties:
+            plugins:
+              type: object
+              oneOf:
+                - required: ["key-auth"]
+                - required: ["jwt"]
+                - required: ["basic-auth"]
+                - required: ["oauth2"]
+          required:
+            - plugins

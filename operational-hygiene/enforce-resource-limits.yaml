@@ -1,0 +1,17 @@
+# Requires that resource limits and requests are applied to Kong control and data planes.
+formats: ["kubernetes"]
+rules:
+  enforce-resource-limits:
+    description: "Ensures that Kong deployments have resource requests and limits defined."
+    message: "Kong deployments must have cpu and memory requests and limits defined."
+    severity: "error"
+    given: "$.spec.template.spec.containers[?(@.name == 'proxy')]"
+    then:
+      - field: "resources.requests.cpu"
+        function: "defined"
+      - field: "resources.requests.memory"
+        function: "defined"
+      - field: "resources.limits.cpu"
+        function: "defined"
+      - field: "resources.limits.memory"
+        function: "defined"

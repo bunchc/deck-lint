@@ -1,0 +1,14 @@
+# Mandates the use of readiness probes with the request-termination plugin for reliable health checks.
+formats: ["kubernetes"]
+rules:
+  readiness-probes-request-termination:
+    description: "Ensures that readiness probes use the request-termination plugin."
+    message: "Services used for readiness probes must use the request-termination plugin."
+    severity: "error"
+    given: "$[?(@.kind == 'Service' && @.metadata.name.includes('health'))]"
+    then:
+      field: "plugins"
+      function: "some"
+      functionOptions:
+        pattern:
+          name: "request-termination"

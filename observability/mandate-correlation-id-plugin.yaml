@@ -1,0 +1,32 @@
+#
+# Rule: Mandate Correlation ID Plugin
+#
+# Description: This rule ensures that the 'correlation-id' plugin is enabled
+# globally. A unique correlation ID in every request is crucial for tracing
+# and debugging across multiple services and systems.
+#
+# Severity: error
+#
+rules:
+  mandate-correlation-id-plugin:
+    description: "The 'correlation-id' plugin must be enabled globally."
+    message: "The 'correlation-id' plugin is not enabled globally."
+    given: "$"
+    severity: error
+    then:
+      function: schema
+      functionOptions:
+        schema:
+          type: object
+          properties:
+            plugins:
+              type: array
+              contains:
+                type: object
+                properties:
+                  name:
+                    const: correlation-id
+                required:
+                  - name
+          required:
+            - plugins

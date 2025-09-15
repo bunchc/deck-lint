@@ -1,0 +1,23 @@
+# Documentation: disallow-global-plugins
+#
+# Prevents plugins from being applied globally. Global plugins can lead to
+# unintended side effects, making the configuration difficult to debug and
+# maintain. This rule enforces that plugins are explicitly scoped to specific
+# services, routes, or consumers, ensuring a clear and predictable behavior
+# within the workspace.
+#
+rules:
+  disallow-global-plugins:
+    description: "Plugins must not be applied globally; they should be scoped to a service, route, or consumer."
+    message: "Global plugin found. Please scope the plugin '{{value.name}}' to a specific service, route, or consumer."
+    given: "$.plugins[*]"
+    severity: "error"
+    then:
+      function: "schema"
+      functionOptions:
+        schema:
+          type: "object"
+          oneOf:
+            - required: ["service"]
+            - required: ["route"]
+            - required: ["consumer"]

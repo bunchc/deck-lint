@@ -1,0 +1,38 @@
+# Documentation: mandate-deprecation-headers
+#
+# Ensures that routes tagged as deprecated are configured with a plugin to
+# return RFC 9745-compliant `Deprecation` and `Sunset` HTTP headers.
+# This provides a standardized way to inform clients about the deprecation
+# status of an API, allowing them to gracefully handle the transition and
+# avoid disruptions.
+#
+rules:
+  mandate-deprecation-headers:
+    description: "Deprecated routes must be configured with a plugin to return 'Deprecation' and 'Sunset' headers."
+    message: "The route '{{error.pointer}}' is deprecated but is not configured to return deprecation headers. Please add a response-transformer plugin or similar to inject the 'Deprecation' and 'Sunset' headers."
+    given: "$.routes[?(@.tags && @.tags.includes('deprecated'))]"
+    severity: "warn"
+    then:
+      function: "schema"
+      functionOptions:
+        schema:
+          type: "object"
+          properties:
+            plugins:
+              type: "array"
+              contains:
+                type: "object"
+                properties:
+                  name:
+                    const: "response-transformer"
+                  config:
+                    type: "object"
+                    properties:
+                      add:
+                        type: "object"
+                        properties:
+                          headers:
+                            type: "array"
+                            contains:
+                              - "Deprecation: true"
+                              - pattern: "^Sunset: "

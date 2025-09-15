@@ -1,0 +1,18 @@
+#
+# Rule: Disallow Deprecated API Versions
+#
+# Description: This rule flags routes that are associated with a service
+# tagged as 'deprecated'. This helps prevent traffic from being routed to
+# outdated or unsupported API versions, ensuring that clients are migrated
+# to newer versions in a timely manner.
+#
+# Severity: warn
+#
+rules:
+  disallow-deprecated-api-versions:
+    description: "Routes should not point to deprecated API versions."
+    message: "Route '{{property}}' is using a service tagged as deprecated."
+    given: "$.routes[?(@.service.tags contains 'deprecated')]"
+    severity: warn
+    then:
+      function: truthy
