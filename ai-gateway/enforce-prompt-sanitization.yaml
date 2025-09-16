@@ -11,7 +11,7 @@ rules:
   enforce-prompt-sanitization:
     description: "AI prompt plugins must be configured to sanitize inputs."
     message: "AI prompt plugin for '{{property}}' is not configured for input sanitization."
-    given: "$.plugins[?(@.name === 'ai-prompt-decorator')].config"
+    given: "$.plugins[?(@.name == 'ai-prompt-decorator')].config"
     severity: error
     then:
       function: schema

@@ -1,0 +1,144 @@
+_format_version: "3.0"
+_workspace: default
+plugins:
+- config:
+    custom_fields_by_lua:
+      request.headers: return nil
+      request.querystring: return nil
+      response.headers: return nil
+    path: /dev/stdout
+    reopen: false
+  enabled: false
+  name: file-log
+  protocols:
+  - grpc
+  - grpcs
+  - http
+  - https
+  tags:
+  - utg-managed
+- config:
+    allow_status_codes:
+    - 100-599
+    consumer_identifier_default: username
+    flush_timeout: null
+    host: newrelic-gostatsd.newrelic-app.svc.cluster.local
+    hostname_in_prefix: false
+    metrics:
+    - consumer_identifier: username
+      name: request_count
+      sample_rate: 1
+      service_identifier: service_name_or_host
+      stat_type: counter
+      workspace_identifier: workspace_name
+    - consumer_identifier: null
+      name: latency
+      sample_rate: null
+      service_identifier: null
+      stat_type: timer
+      workspace_identifier: null
+    - consumer_identifier: null
+      name: request_size
+      sample_rate: 1
+      service_identifier: null
+      stat_type: counter
+      workspace_identifier: null
+    - consumer_identifier: username
+      name: status_count
+      sample_rate: 1
+      service_identifier: service_name_or_host
+      stat_type: counter
+      workspace_identifier: workspace_name
+    - consumer_identifier: null
+      name: response_size
+      sample_rate: 1
+      service_identifier: null
+      stat_type: counter
+      workspace_identifier: null
+    - consumer_identifier: null
+      name: unique_users
+      sample_rate: null
+      service_identifier: null
+      stat_type: set
+      workspace_identifier: null
+    - consumer_identifier: null
+      name: request_per_user
+      sample_rate: 1
+      service_identifier: null
+      stat_type: counter
+      workspace_identifier: null
+    - consumer_identifier: null
+      name: upstream_latency
+      sample_rate: null
+      service_identifier: null
+      stat_type: timer
+      workspace_identifier: null
+    - consumer_identifier: null
+      name: kong_latency
+      sample_rate: null
+      service_identifier: null
+      stat_type: timer
+      workspace_identifier: null
+    - consumer_identifier: null
+      name: status_count_per_user
+      sample_rate: 1
+      service_identifier: null
+      stat_type: counter
+      workspace_identifier: null
+    - consumer_identifier: null
+      name: status_count_per_workspace
+      sample_rate: 1
+      service_identifier: null
+      stat_type: counter
+      workspace_identifier: null
+    - consumer_identifier: null
+      name: status_count_per_user_per_route
+      sample_rate: 1
+      service_identifier: null
+      stat_type: counter
+      workspace_identifier: null
+    - consumer_identifier: null
+      name: shdict_usage
+      sample_rate: 1
+      service_identifier: null
+      stat_type: gauge
+      workspace_identifier: null
+    - consumer_identifier: null
+      name: cache_datastore_hits_total
+      sample_rate: 1
+      service_identifier: null
+      stat_type: counter
+      workspace_identifier: null
+    - consumer_identifier: null
+      name: cache_datastore_misses_total
+      sample_rate: 1
+      service_identifier: null
+      stat_type: counter
+      workspace_identifier: null
+    port: 8128
+    prefix: utg-default
+    queue:
+      initial_retry_delay: 0.01
+      max_batch_size: 1
+      max_bytes: null
+      max_coalescing_delay: 1
+      max_entries: 10000
+      max_retry_delay: 60
+      max_retry_time: 60
+    queue_size: null
+    retry_count: null
+    service_identifier_default: service_name_or_host
+    tag_style: null
+    udp_packet_size: 0
+    use_tcp: false
+    workspace_identifier_default: workspace_name
+  enabled: true
+  instance_name: default-statsd
+  name: statsd
+  protocols:
+  - grpc
+  - grpcs
+  - http
+  - https
+  tags:
+  - utg-managed

@@ -21,9 +21,15 @@ rules:
     given: "$.services[*]"
     severity: error
     then:
-      function: pattern
+      field: plugins
+      function: "schema"
       functionOptions:
-        match:
-          plugins:
-            - name: "circuit-breaker"
-            - name: "circuit-breaker-advanced"
+        schema:
+          type: "array"
+          contains:
+            type: "object"
+            properties:
+              name:
+                enum: ["circuit-breaker", "circuit-breaker-advanced"]
+            required:
+              - name

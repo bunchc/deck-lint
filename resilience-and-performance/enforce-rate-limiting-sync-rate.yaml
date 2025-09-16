@@ -16,7 +16,7 @@ rules:
   enforce-rate-limiting-sync-rate:
     description: "The `sync_rate` for rate limiting plugins must be at least 1 second."
     message: "Plugin '{{value.name}}' has a `sync_rate` of less than 1 second."
-    given: "$.plugins[?(@.name === 'rate-limiting-advanced' || @.name === 'service-protection')]"
+    given: "$.plugins[?(@.name == 'rate-limiting-advanced' || @.name == 'service-protection')]"
     severity: error
     then:
       field: config.sync_rate

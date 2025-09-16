@@ -1,0 +1,96 @@
+_format_version: "3.0"
+services:
+# Rule: require-logging-plugin (negative)
+- name: no-logging-service-negative
+  host: example.com
+# Rule: require-logging-plugin (positive)
+- name: logging-service-positive
+  host: example.com
+  plugins:
+  - name: file-log
+# Rule: recommend-slo-monitoring-tags (negative)
+- name: no-slo-tags-service-negative
+  host: example.com
+# Rule: recommend-slo-monitoring-tags (positive)
+- name: slo-tags-service-positive
+  host: example.com
+  tags:
+  - slo:true
+# Rule: enforce-opentelemetry-config (negative)
+- name: opentelemetry-config-negative-service
+  host: example.com
+  plugins:
+  - name: opentelemetry
+    config:
+      endpoint: "http://jaeger:4317"
+      sampling_rate: 0.001
+# Rule: enforce-opentelemetry-config (positive)
+- name: opentelemetry-config-positive-service
+  host: example.com
+  plugins:
+  - name: opentelemetry
+    config:
+      endpoint: "https://jaeger:4317"
+      sampling_rate: 0.5
+# Rule: enforce-secure-opentelemetry-exporter (negative)
+- name: opentelemetry-secure-exporter-negative-service
+  host: example.com
+  plugins:
+  - name: opentelemetry
+    config:
+      endpoint: "http://jaeger:4317"
+# Rule: enforce-secure-opentelemetry-exporter (positive)
+- name: opentelemetry-secure-exporter-positive-service
+  host: example.com
+  plugins:
+  - name: opentelemetry
+    config:
+      endpoint: "https://jaeger:4317"
+# Rule: enforce-w3c-trace-context (negative)
+- name: opentelemetry-w3c-negative-service
+  host: example.com
+  plugins:
+  - name: opentelemetry
+    config:
+      header_type: "b3"
+# Rule: enforce-w3c-trace-context (positive)
+- name: opentelemetry-w3c-positive-service
+  host: example.com
+  plugins:
+  - name: opentelemetry
+    config:
+      header_type: "w3c"
+# Rule: require-log-sanitization (negative)
+- name: tcp-log-negative-service
+  host: example.com
+  plugins:
+  - name: tcp-log
+    config:
+      redact: false
+# Rule: require-log-sanitization (positive)
+- name: tcp-log-positive-service
+  host: example.com
+  plugins:
+  - name: tcp-log
+    config:
+      redact: true
+# Rule: enforce-global-observability-plugins (negative)
+- name: prometheus-non-global-service
+  host: example.com
+  plugins:
+  - name: prometheus
+# Rule: require-prometheus-plugin (positive)
+- name: prometheus-positive-service
+  host: example.com
+  plugins:
+  - name: prometheus
+
+plugins:
+# Rule: disallow-file-log-in-production (negative)
+- name: file-log
+  instance_name: file-log-negative
+# Rule: enforce-global-observability-plugins (positive)
+- name: prometheus
+  instance_name: prometheus-global
+# Rule: mandate-correlation-id-plugin (positive)
+- name: correlation-id

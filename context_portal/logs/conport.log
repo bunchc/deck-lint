@@ -12,3 +12,14 @@
 2025-09-15 11:48:58,977 - INFO - context_portal_mcp.db.database - Initial schema not found. Creating at /Users/cody.bunch/projects/Work/Kong/deck-lint/context_portal/alembic/versions/2025_06_17_initial_schema.py
 2025-09-15 11:48:58,977 - INFO - context_portal_mcp.db.database - Alembic: Script directory /Users/cody.bunch/projects/Work/Kong/deck-lint/context_portal/alembic confirmed to exist by Python.
 2025-09-15 11:48:58,978 - INFO - context_portal_mcp.db.database - Running Alembic migrations for database: /Users/cody.bunch/projects/Work/Kong/deck-lint/context_portal/context.db
+2025-09-16 07:04:14,808 - INFO - context_portal_mcp.main - File logging configured to: /Users/cody.bunch/projects/Work/Kong/deck-lint/context_portal/./logs/conport.log
+2025-09-16 07:04:14,808 - INFO - context_portal_mcp.core.config - Database filename set to: context.db
+2025-09-16 07:04:14,809 - INFO - context_portal_mcp.main - Using database filename: context.db
+2025-09-16 07:04:14,809 - INFO - context_portal_mcp.main - Parsed CLI args: Namespace(host='127.0.0.1', port=8000, workspace_id='/Users/cody.bunch/projects/Work/Kong/deck-lint', auto_detect_workspace=True, workspace_search_start=None, no_auto_detect=False, mode='stdio', log_file='./logs/conport.log', db_path=None, base_path=None, db_filename='context.db', log_level='INFO')
+2025-09-16 07:04:14,809 - INFO - context_portal_mcp.main - Starting ConPort in STDIO mode with workspace detection enabled
+2025-09-16 07:04:14,809 - INFO - context_portal_mcp.core.workspace_detector - Workspace detected by strong indicators: /Users/cody.bunch/projects/Work/Kong/deck-lint
+2025-09-16 07:04:14,809 - INFO - context_portal_mcp.main - Workspace detection details: {'start_path': '/Users/cody.bunch/projects/Work/Kong/deck-lint', 'detected_workspace': '/Users/cody.bunch/projects/Work/Kong/deck-lint', 'context_portal_path': '/Users/cody.bunch/projects/Work/Kong/deck-lint/context_portal', 'detection_method': 'strong_indicators', 'indicators_found': ['.git', '.gitignore', 'README.md'], 'environment_variables': {'VSCODE_WORKSPACE_FOLDER': None, 'CONPORT_WORKSPACE': None, 'PWD': '/Users/cody.bunch/projects/Work/Kong/deck-lint', 'CWD': '/Users/cody.bunch/projects/Work/Kong/deck-lint'}}
+2025-09-16 07:04:14,809 - INFO - context_portal_mcp.main - Effective workspace ID: /Users/cody.bunch/projects/Work/Kong/deck-lint
+2025-09-16 07:04:14,809 - INFO - context_portal_mcp.main - Pre-warming database connection for workspace: /Users/cody.bunch/projects/Work/Kong/deck-lint
+2025-09-16 07:04:14,810 - INFO - context_portal_mcp.db.database - Alembic: Script directory /Users/cody.bunch/projects/Work/Kong/deck-lint/context_portal/alembic confirmed to exist by Python.
+2025-09-16 07:04:14,810 - INFO - context_portal_mcp.db.database - Running Alembic migrations for database: /Users/cody.bunch/projects/Work/Kong/deck-lint/context_portal/context.db

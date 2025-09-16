@@ -13,7 +13,7 @@ rules:
   recommend-advanced-load-balancing-for-ai-models:
     description: Recommends advanced load balancing for routes with multiple AI models.
     message: "Consider using an advanced load balancing strategy (e.g., 'lowest-latency', 'semantic') for routes with multiple AI models."
-    given: "$.services[?(@.targets.length > 1 && @.algorithm IN ['round-robin', 'consistent-hashing'])]"
+    given: "$.services[?(@.targets.length > 1 && (@.algorithm == 'round-robin' || @.algorithm == 'consistent-hashing'))]"
     severity: warn
     then:
       function: truthy

@@ -1,0 +1,102 @@
+_format_version: "3.0"
+services:
+# Rule: enforce-service-naming-convention (negative)
+- name: bad-name
+  host: example.com
+# Rule: enforce-service-naming-convention (positive)
+- name: team-app-prod
+  host: example.com
+# Rule: disallow-deprecated-api-versions (negative)
+- name: deprecated-service
+  host: example.com
+  tags:
+  - deprecated
+# Rule: enforce-deprecation-tagging (negative)
+- name: deprecated-no-sunset-tag
+  host: example.com
+  tags:
+  - deprecated
+# Rule: enforce-deprecation-tagging (positive)
+- name: deprecated-with-sunset-tag
+  host: example.com
+  tags:
+  - deprecated
+  - sunset-2025-12-31
+# Rule: require-mandatory-resource-tags (negative)
+- name: no-tags-service
+  host: example.com
+# Rule: require-mandatory-resource-tags (positive)
+- name: tagged-service
+  host: example.com
+  tags:
+  - team:backend
+  - env:prod
+  - owner:jdoe
+# Rule: require-standard-tags (negative)
+- name: no-standard-tags-service
+  host: example.com
+  tags:
+  - foo:bar
+# Rule: require-standard-tags (positive)
+- name: standard-tags-service
+  host: example.com
+  tags:
+  - team
+  - env
+  - owner
+
+routes:
+# Rule: disallow-deprecated-api-versions (negative)
+- name: route-to-deprecated-service
+  service:
+    name: deprecated-service
+  paths:
+  - /
+# Rule: require-explicit-api-versioning (negative)
+- name: no-version-route
+  paths:
+  - /foo
+# Rule: require-explicit-api-versioning (positive)
+- name: versioned-route
+  paths:
+  - /v1/foo
+# Rule: mandate-deprecation-headers (negative)
+- name: deprecated-no-headers-route
+  tags:
+  - deprecated
+  paths:
+  - /deprecated
+# Rule: mandate-deprecation-headers (positive)
+- name: deprecated-with-headers-route
+  tags:
+  - deprecated
+  paths:
+  - /deprecated-with-headers
+  plugins:
+  - name: response-transformer
+    config:
+      add:
+        headers:
+        - "Deprecation: true"
+        - "Sunset: Mon, 01 Jan 2025 00:00:00 GMT"
+
+plugins:
+# Rule: disallow-global-plugins (negative)
+- name: rate-limiting
+  instance_name: global-rate-limit
+# Rule: disallow-global-plugins (positive)
+- name: rate-limiting
+  instance_name: scoped-rate-limit
+  service: team-app-prod
+# Rule: enforce-plugin-naming-convention (negative)
+- name: bad-plugin-name
+# Rule: enforce-plugin-naming-convention (positive)
+- name: my-plugin-1v0
+# Rule: enforce-tagging-schema (negative)
+- name: untagged-plugin
+  tags:
+  - not-a-kv-tag
+# Rule: enforce-tagging-schema (positive)
+- name: tagged-plugin
+  tags:
+  - team:backend

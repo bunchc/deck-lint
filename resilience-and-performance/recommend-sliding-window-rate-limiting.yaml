@@ -16,7 +16,7 @@ rules:
   recommend-sliding-window-rate-limiting:
     description: "The sliding window algorithm should be used for rate limiting."
     message: "Plugin '{{value.name}}' is not using the sliding window algorithm."
-    given: "$.plugins[?(@.name === 'rate-limiting' || @.name === 'rate-limiting-advanced')]"
+    given: "$.plugins[?(@.name == 'rate-limiting' || @.name == 'rate-limiting-advanced')]"
     severity: warn
     then:
       field: config.strategy

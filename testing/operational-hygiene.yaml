@@ -1,0 +1,54 @@
+_format_version: "3.0"
+services:
+# Rule: require-readiness-probes (negative)
+- name: health-service-no-probe
+  host: example.com
+# Rule: require-readiness-probes (positive)
+- name: health-service-with-probe
+  host: example.com
+  plugins:
+  - name: request-termination
+
+routes:
+# Rule: no-wildcard-hosts (negative)
+- name: wildcard-host-route
+  hosts:
+  - "*.example.com"
+# Rule: no-wildcard-hosts (positive)
+- name: specific-host-route
+  hosts:
+  - "foo.example.com"
+# Rule: require-explicit-route-matching (negative)
+- name: no-explicit-match-route
+# Rule: require-explicit-route-matching (positive)
+- name: explicit-match-route
+  hosts:
+  - "bar.example.com"
+# Rule: prevent-open-proxies (negative)
+- name: open-proxy-route
+# Rule: prevent-open-proxies (positive)
+- name: not-open-proxy-route
+  hosts:
+  - "baz.example.com"
+# Rule: require-catch-all-route (negative)
+# (no catch-all route)
+# Rule: require-catch-all-route (positive)
+- name: catch-all-route
+  paths:
+  - /
+  priority: 0
+
+consumers:
+# Rule: disallow-unused-consumers (negative)
+- username: unused-consumer
+# Rule: disallow-unused-consumers (positive)
+- username: used-consumer
+  acls:
+  - group: foo
+
+# The following rules are for Kubernetes Gateway API and are not testable with deck files.
+# - avoid-kongclusterplugin-overload
+# - enforce-kic-gateway-mapping
+# - enforce-real-ip-forwarding
+# - enforce-resource-limits
+# - require-dedicated-gatewayclass

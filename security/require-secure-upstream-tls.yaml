@@ -11,9 +11,16 @@ rules:
     given: "$.services[?(@.protocol == 'https')]"
     severity: "error"
     then:
-      function: pattern
+      function: schema
       functionOptions:
-        match:
-          tls_verify: true
-          ca_certificates:
-            - ".+"
+        schema:
+          type: object
+          properties:
+            tls_verify:
+              const: true
+            ca_certificates:
+              type: array
+              minItems: 1
+          required:
+            - tls_verify
+            - ca_certificates

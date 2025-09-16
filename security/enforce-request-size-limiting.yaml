@@ -2,13 +2,18 @@ rules:
   enforce-request-size-limiting:
     description: "All public-facing routes must have the request-size-limiter plugin configured."
     message: "Route is not tagged as 'internal' and is missing the 'request-size-limiter' plugin."
-    given: "$.routes[*]"
+    given: "$.routes[?(!(@.tags && @.tags.includes('internal')))]"
     severity: "warn"
     then:
-      function: "pattern"
+      field: plugins
+      function: "schema"
       functionOptions:
-        match:
-          tags:
-            - "internal"
-          plugins:
-            - name: "request-size-limiter"
+        schema:
+          type: "array"
+          contains:
+            type: "object"
+            properties:
+              name:
+                const: "request-size-limiter"
+            required:
+              - name

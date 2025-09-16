@@ -2,11 +2,8 @@ rules:
   enforce-upstream-tls-validation:
     description: "Upstream services using HTTPS must have TLS validation enabled."
     message: "Service '{{property}}' uses https protocol but does not have tls_verify enabled."
-    given: "$.services[*]"
+    given: "$.services[?(@.protocol == 'https')]"
     severity: error
     then:
-      function: "pattern"
-      functionOptions:
-        match:
-          protocol: "https"
-          tls_verify: true
+      field: tls_verify
+      function: "truthy"

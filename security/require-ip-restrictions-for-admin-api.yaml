@@ -11,8 +11,15 @@ rules:
     given: "$.services[?(@.tags[*] == 'admin-api')]"
     severity: "error"
     then:
-      field: "plugins"
-      function: pattern
+      field: plugins
+      function: "schema"
       functionOptions:
-        match:
-          name: "ip-restriction"
+        schema:
+          type: "array"
+          contains:
+            type: "object"
+            properties:
+              name:
+                const: "ip-restriction"
+            required:
+              - name

@@ -8,7 +8,7 @@ rules:
   jwt-claims-validation:
     description: "JWT plugins must validate 'exp' and 'nbf' claims."
     message: "JWT plugin for consumer '{{value.consumer.id}}' must have 'config.claims_to_verify' containing 'exp' and 'nbf'."
-    given: "$.plugins[*]"
+    given: "$.plugins[?(@.name=='jwt')]"
     severity: "error"
     then:
       function: pattern

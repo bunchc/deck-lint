@@ -1,0 +1,180 @@
+_format_version: "3.0"
+services:
+# Rule: disallow-http-protocol-for-upstreams (negative)
+- name: http-service-negative
+  protocol: http
+  host: example.com
+  port: 80
+# Rule: disallow-http-protocol-for-upstreams (positive)
+# Rule: require-secure-upstream-tls (positive)
+- name: https-service-positive
+  protocol: https
+  host: example.com
+  port: 443
+  tls_verify: true
+  ca_certificates:
+    - ca-cert-1
+# Rule: require-mtls-for-upstreams (positive)
+- name: mtls-service-positive
+  protocol: https
+  host: example.com
+  port: 443
+  client_certificate: "client-cert-id"
+# Rule: require-ip-restrictions-for-admin-api (negative)
+- name: admin-api-service-negative
+  tags:
+    - admin-api
+  host: admin.example.com
+# Rule: require-ip-restrictions-for-admin-api (positive)
+- name: admin-api-service-positive
+  tags:
+    - admin-api
+  host: admin.example.com
+  plugins:
+  - name: ip-restriction
+    config:
+      allow:
+      - 127.0.0.1
+
+routes:
+# Rule: disallow-unauthenticated-routes (negative)
+- name: unauthenticated-route-negative
+  paths:
+  - /
+# Rule: disallow-unauthenticated-routes (positive)
+- name: authenticated-route-positive
+  paths:
+  - /
+  plugins:
+  - name: jwt
+    instance_name: jwt-positive
+    config:
+      claims_to_verify:
+      - exp
+      - nbf
+# Rule: disallow-sensitive-info-in-uris (negative)
+- name: sensitive-uri-route-negative
+  paths:
+  - /get?api_key=12345
+# Rule: disallow-sensitive-info-in-uris (positive)
+- name: clean-uri-route-positive
+  paths:
+  - /get
+# Rule: disallow-debug-headers-in-prod (negative)
+- name: prod-debug-headers-route-negative
+  tags:
+  - env:prod
+  plugins:
+  - name: request-transformer
+    config:
+      add:
+        headers:
+        - "x-debug-log: true"
+# Rule: disallow-debug-headers-in-prod (positive)
+- name: prod-no-debug-headers-route-positive
+  tags:
+  - env:prod
+# Rule: enforce-tls-for-all-connections (negative)
+- name: http-route-negative
+  protocols:
+  - http
+# Rule: enforce-tls-for-all-connections (positive)
+- name: https-route-positive
+  protocols:
+  - https
+# Rule: enforce-acl-on-protected-routes (negative)
+- name: protected-no-acl-route-negative
+  tags:
+  - protected
+# Rule: enforce-acl-on-protected-routes (positive)
+- name: protected-with-acl-route-positive
+  tags:
+  - protected
+  plugins:
+  - name: acl
+# Rule: require-bot-detection-on-public-forms (negative)
+- name: public-form-no-bot-detection-route-negative
+  tags:
+  - public-form
+# Rule: require-bot-detection-on-public-forms (positive)
+- name: public-form-with-bot-detection-route-positive
+  tags:
+  - public-form
+  plugins:
+  - name: bot-detection
+# Rule: require-response-filtering-for-pii (negative)
+- name: pii-no-response-transformer-route-negative
+  tags:
+  - pii
+# Rule: require-response-filtering-for-pii (positive)
+- name: pii-with-response-transformer-route-positive
+  tags:
+  - pii
+  plugins:
+  - name: response-transformer
+# Rule: enforce-request-size-limiting (negative)
+- name: internal-no-size-limit-route-negative
+  tags:
+  - internal
+# Rule: enforce-request-size-limiting (positive)
+- name: internal-with-size-limit-route-positive
+  tags:
+  - internal
+  plugins:
+  - name: request-size-limiter
+# Rule: require-ip-restriction-on-sensitive-routes (negative)
+- name: sensitive-no-ip-restriction-route-negative
+  tags:
+  - sensitive
+# Rule: require-ip-restriction-on-sensitive-routes (positive)
+- name: sensitive-with-ip-restriction-route-positive
+  tags:
+  - sensitive
+  plugins:
+  - name: ip-restriction
+# Rule: disallow-http-for-oidc (negative)
+# Rule: require-client-secret-in-vault (negative)
+# Rule: enforce-dpop-validation (negative)
+- name: oidc-route-negative
+  plugins:
+  - name: oidc
+    instance_name: oidc-negative
+    config:
+      issuer: "http://my-oidc-provider.com"
+      client_secret: "my-secret"
+      dpop_validate: false
+# Rule: disallow-http-for-oidc (positive)
+# Rule: require-client-secret-in-vault (positive)
+# Rule: enforce-dpop-validation (positive)
+- name: oidc-route-positive
+  plugins:
+  - name: oidc
+    instance_name: oidc-positive
+    config:
+      issuer: "https://my-oidc-provider.com"
+      client_secret: "{vault://secrets/oidc/client-secret}"
+      dpop_validate: true
+# Rule: disallow-key-auth-insecure (negative)
+- name: key-auth-route-negative
+  plugins:
+  - name: key-auth
+# Rule: enforce-jwt-claim-validation (negative)
+- name: jwt-route-negative
+  plugins:
+  - name: jwt
+    instance_name: jwt-negative
+    config:
+      claims_to_verify:
+      - exp
+
+consumers:
+- username: permissive-consumer
+  keyauth_credentials:
+  - key: some-key
+  acls:
+  - group: admin
+- username: restricted-consumer
+  keyauth_credentials:
+  - key: another-key
+  acls:
+  - group: user

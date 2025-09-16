@@ -12,7 +12,7 @@ rules:
   disallow-deprecated-api-versions:
     description: "Routes should not point to deprecated API versions."
     message: "Route '{{property}}' is using a service tagged as deprecated."
-    given: "$.routes[?(@.service.tags contains 'deprecated')]"
+    given: "$.routes[?('deprecated' in @.service.tags)]"
     severity: warn
     then:
       function: truthy

@@ -12,7 +12,7 @@ rules:
   insecure-admin-api:
     description: "Admin API routes must use TLS and have an authentication plugin."
     message: "Admin API route '{{property}}' is insecure. It must use 'https' and have an auth plugin."
-    given: "$.routes[?(@.name === 'admin-api')]"
+    given: "$.routes[?(@.name == 'admin-api')]"
     severity: error
     then:
       - function: schema

@@ -1,0 +1,139 @@
+_format_version: "3.0"
+upstreams:
+# Rule: recommend-advanced-load-balancing-for-ai-models (negative)
+- name: basic-load-balancing-upstream
+  targets:
+  - target: "model1.ai:443"
+  - target: "model2.ai:443"
+  algorithm: "round-robin"
+# Rule: recommend-advanced-load-balancing-for-ai-models (positive)
+- name: advanced-load-balancing-upstream
+  targets:
+  - target: "model1.ai:443"
+  - target: "model2.ai:443"
+  algorithm: "least-connections"
+
+services:
+- name: basic-load-balancing-service
+  host: basic-load-balancing-upstream
+- name: advanced-load-balancing-service
+  host: advanced-load-balancing-upstream
+
+routes:
+# Rule: disallow-unauthenticated-ai-proxy (negative)
+- name: unauthenticated-ai-proxy-route
+  plugins:
+  - name: ai-proxy
+# Rule: disallow-unauthenticated-ai-proxy (positive)
+- name: authenticated-ai-proxy-route
+  plugins:
+  - name: ai-proxy
+  - name: key-auth
+# Rule: enforce-token-based-rate-limiting-for-llms (negative)
+- name: no-token-rate-limiting-route
+  plugins:
+  - name: ai-proxy
+    config:
+      route_type: "llm/v1/chat"
+# Rule: enforce-token-based-rate-limiting-for-llms (positive)
+- name: token-rate-limiting-route
+  plugins:
+  - name: ai-proxy
+    config:
+      route_type: "llm/v1/chat"
+  - name: ai-rate-limiting-advanced
+# Rule: mandate-opentelemetry-for-ai-workflows (negative)
+- name: no-opentelemetry-route
+  tags:
+  - ai-gateway
+# Rule: mandate-opentelemetry-for-ai-workflows (positive)
+- name: opentelemetry-route
+  tags:
+  - ai-gateway
+  plugins:
+  - name: opentelemetry
+# Rule: require-ai-acl-on-mcp-routes (negative)
+- name: no-acl-mcp-route
+  tags:
+  - mcp
+# Rule: require-ai-acl-on-mcp-routes (positive)
+- name: acl-mcp-route
+  tags:
+  - mcp
+  plugins:
+  - name: acl
+# Rule: require-ai-prompt-guard (negative)
+- name: no-prompt-guard-route
+  tags:
+  - ai-gateway
+# Rule: require-ai-prompt-guard (positive)
+- name: prompt-guard-route
+  tags:
+  - ai-gateway
+  plugins:
+  - name: ai-prompt-guard
+# Rule: require-centralized-logging-for-llm-usage (negative)
+- name: no-logging-route
+  tags:
+  - ai-gateway
+# Rule: require-centralized-logging-for-llm-usage (positive)
+- name: logging-route
+  tags:
+  - ai-gateway
+  plugins:
+  - name: tcp-log
+# Rule: require-rate-limiting-on-llm-routes (negative)
+- name: no-rate-limiting-route
+  plugins:
+  - name: ai-proxy
+# Rule: require-rate-limiting-on-llm-routes (positive)
+- name: rate-limiting-route
+  plugins:
+  - name: ai-proxy
+  - name: ai-rate-limiting
+# Rule: disallow-unspecified-upstream-for-self-hosted-llms (negative)
+- name: self-hosted-no-upstream-route
+  plugins:
+  - name: ai-proxy
+    config:
+      model:
+        provider: "self-hosted"
+# Rule: disallow-unspecified-upstream-for-self-hosted-llms (positive)
+- name: self-hosted-with-upstream-route
+  plugins:
+  - name: ai-proxy
+    config:
+      model:
+        provider: "self-hosted"
+      upstream_url: "https://my-llm.com"
+# Rule: enforce-ai-proxy-route-type (negative)
+- name: no-route-type-route
+  plugins:
+  - name: ai-proxy
+    config:
+      model:
+        provider: "openai"
+# Rule: enforce-ai-proxy-route-type (positive)
+- name: with-route-type-route
+  plugins:
+  - name: ai-proxy
+    config:
+      model:
+        provider: "openai"
+      route_type: "llm/v1/chat"
+# Rule: enforce-prompt-sanitization (negative)
+- name: no-sanitization-route
+  plugins:
+  - name: ai-prompt-decorator
+    config:
+      prompts:
+        prepend:
+        - content: "foo"
+# Rule: enforce-prompt-sanitization (positive)
+- name: with-sanitization-route
+  plugins:
+  - name: ai-prompt-decorator
+    config:
+      prompts:
+        prepend:
+        - content: "sanitize"

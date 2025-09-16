@@ -12,7 +12,7 @@ rules:
   enforce-opentelemetry-config:
     description: "OpenTelemetry plugin must be configured correctly."
     message: "OpenTelemetry plugin for '{{property}}' has an invalid configuration."
-    given: "$.plugins[?(@.name === 'opentelemetry')].config"
+    given: "$.plugins[?(@.name == 'opentelemetry')].config"
     severity: error
     then:
       function: schema

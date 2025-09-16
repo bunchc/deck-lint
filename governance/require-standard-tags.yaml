@@ -11,7 +11,7 @@ rules:
   require-standard-tags:
     description: "Services and routes must have standard tags."
     message: "Missing standard tags on {{property}}. Must include 'team', 'env', and 'owner'."
-    given: "$.services[*] | $.routes[*]"
+    given: "$.services[*], $.routes[*]"
     severity: error
     then:
       function: schema

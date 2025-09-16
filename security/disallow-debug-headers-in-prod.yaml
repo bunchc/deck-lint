@@ -8,14 +8,9 @@ rules:
   disallow-debug-headers-in-prod:
     description: "Routes tagged as 'env:prod' must not use debug headers."
     message: "Route '{{value.name}}' is tagged for production and should not have debug headers."
-    given: "$.routes[?(@.tags[*] == 'env:prod')].plugins[*]"
+    given: "$.routes[?(@.tags[*] == 'env:prod')].plugins[?(@.name == 'request-transformer')].config.add.headers[*]"
     severity: "error"
     then:
       function: pattern
       functionOptions:
-        notMatch:
-          name: "request-transformer"
-          config:
-            add:
-              headers:
-                - ".*debug.*"
+        notMatch: ".*debug.*"
