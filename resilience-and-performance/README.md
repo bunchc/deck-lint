@@ -1,6 +1,6 @@
 # Resilience and Performance Rules
 
-These rules are designed to ensure the stability, high availability, and optimal performance of your services. They enforce best practices for critical resilience patterns such as timeouts, retries, circuit breakers, and health checks. Adhering to these rules helps prevent cascading failures, reduces latency, and ensures that your services can gracefully handle transient issues.
+These rules help keep your services stable, available, and performant. They enforce best practices for timeouts, retries, circuit breakers, and health checks. Following these rules helps prevent cascading failures, reduces latency, and ensures your services can handle temporary problems.
 
 ## Rules
 

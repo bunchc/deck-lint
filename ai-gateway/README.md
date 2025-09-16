@@ -1,13 +1,13 @@
 # AI Gateway Rules
 
-These rules are specific to Kong's AI Gateway features, focusing on the unique governance needs of LLM routes, such as rate-limiting, prompt sanitization, and authentication. Proper governance of AI services is critical for security, cost management, and ensuring reliable performance.
+These rules help you manage your Kong AI Gateway. They focus on important needs for AI services, like rate-limiting, prompt cleaning, and security. Good management of AI services is key for security, cost control, and reliable service.
 
-The rules in this category help enforce best practices for AI proxy usage, including:
+These rules help you use the AI proxy safely and efficiently:
 
-*   **Security**: Preventing unauthorized access, prompt injection, and ensuring secure communication.
-*   **Cost Management**: Implementing rate-limiting to control token usage and prevent cost overruns.
-*   **Reliability**: Ensuring proper configuration for self-hosted models and standardizing route types.
-*   **Observability**: Mandating logging and tracing for monitoring and debugging.
+* **Security**: Stop unauthorized access and prompt injection. Keep communication secure.
+* **Cost Control**: Use rate-limiting to manage token use and avoid high costs.
+* **Reliability**: Set up self-hosted models correctly and use standard route types.
+* **Observability**: Require logs and traces to monitor and fix issues.
 
 ## Rules
 

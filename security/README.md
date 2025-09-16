@@ -1,29 +1,39 @@
 # Security Rules
 
-This directory contains Spectral rules focused on enforcing security best practices for Kong Gateway configurations. Examples include requiring mTLS, securing the Admin API, and enforcing least-privilege RBAC.
+This folder holds rules to secure your Kong Gateway. These rules help you avoid common security mistakes.
+
+The rules cover many security topics:
+
+*   **Encryption**: Use TLS for all connections.
+*   **Authentication**: Require login on all routes. Set up OIDC and JWT securely.
+*   **Authorization**: Use proper RBAC and ACLs.
+*   **Data Protection**: Stop leaks of secret data.
+*   **Admin API Security**: Secure the Admin API.
 
 ## Rules
 
-| Rule File                                                                                              | Description                                                                                                                        |
-| ------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------- |
-| [`disallow-debug-headers-in-prod.yaml`](./disallow-debug-headers-in-prod.yaml)                         | Flags routes tagged as production ('env:prod') that are configured to add or echo debug headers.                                   |
-| [`disallow-http-for-oidc.yaml`](./disallow-http-for-oidc.yaml)                                         | Ensures that the OpenID Connect (OIDC) plugin is configured with an issuer endpoint that uses HTTPS.                               |
-| [`disallow-http-protocol-for-upstreams.yaml`](./disallow-http-protocol-for-upstreams.yaml)             | Upstream services must use the 'https' protocol.                                                                                   |
-| [`disallow-insecure-admin-api.yaml`](./disallow-insecure-admin-api.yaml)                               | Flags Admin API routes that are not secured with TLS and an authentication plugin.                                                 |
-| [`disallow-key-auth-insecure.yaml`](./disallow-key-auth-insecure.yaml)                                 | Flags the use of the 'key-auth' plugin, which stores API keys in plaintext.                                                        |
-| [`disallow-sensitive-info-in-uris.yaml`](./disallow-sensitive-info-in-uris.yaml)                       | Scans for common sensitive patterns (e.g., 'api_key', 'token', 'password') in the URI paths of routes.                             |
-| [`disallow-unauthenticated-routes.yaml`](./disallow-unauthenticated-routes.yaml)                       | All routes must have an authentication plugin enabled.                                                                             |
-| [`enforce-acl-on-protected-routes.yaml`](./enforce-acl-on-protected-routes.yaml)                       | All routes tagged as 'protected' must have the ACL plugin enabled.                                                                 |
-| [`enforce-dpop-validation.yaml`](./enforce-dpop-validation.yaml)                                       | Requires that the OIDC plugin is configured to enable DPoP (Demonstration of Proof-of-Possession) validation.                      |
-| [`enforce-jwt-claim-validation.yaml`](./enforce-jwt-claim-validation.yaml)                             | Ensures that any JWT plugin is configured to validate the expiration time ('exp') and 'not before' ('nbf') claims.                 |
-| [`enforce-rbac-least-privilege.yaml`](./enforce-rbac-least-privilege.yaml)                             | Warns if a consumer is assigned a role that is overly permissive, such as 'super-admin'.                                           |
-| [`enforce-request-size-limiting.yaml`](./enforce-request-size-limiting.yaml)                           | All public-facing routes must have the request-size-limiter plugin configured.                                                     |
-| [`enforce-tls-for-all-connections.yaml`](./enforce-tls-for-all-connections.yaml)                       | Ensures that all routes are configured to use the 'https' protocol.                                                                |
-| [`enforce-upstream-tls-validation.yaml`](./enforce-upstream-tls-validation.yaml)                       | Upstream services using HTTPS must have TLS validation enabled.                                                                    |
-| [`require-bot-detection-on-public-forms.yaml`](./require-bot-detection-on-public-forms.yaml)           | Routes tagged as 'public-form' or 'sensitive-flow' must have the bot-detection plugin enabled.                                     |
-| [`require-client-secret-in-vault.yaml`](./require-client-secret-in-vault.yaml)                         | Ensures that the OIDC plugin's 'client_secret' is loaded from Kong Vault.                                                          |
-| [`require-ip-restriction-on-sensitive-routes.yaml`](./require-ip-restriction-on-sensitive-routes.yaml) | Routes tagged as 'sensitive' or 'internal' must have the ip-restriction plugin.                                                    |
-| [`require-ip-restrictions-for-admin-api.yaml`](./require-ip-restrictions-for-admin-api.yaml)           | Ensures that the Kong Admin API is protected by the 'ip-restriction' plugin.                                                       |
-| [`require-mtls-for-upstreams.yaml`](./require-mtls-for-upstreams.yaml)                                 | Ensures that any upstream service is configured for mutual TLS (mTLS).                                                             |
-| [`require-response-filtering-for-pii.yaml`](./require-response-filtering-for-pii.yaml)                 | Routes tagged with 'pii' must use a response transformation plugin.                                                                |
-| [`require-secure-upstream-tls.yaml`](./require-secure-upstream-tls.yaml)                               | Ensures that any service using HTTPS for its upstream connection has 'tls_verify' enabled and a 'ca_certificates' list configured. |
+This table lists all security rules.
+
+| Rule Name                                    | Rule File                                                                                              | Description                                                                            |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------- |
+| `disallow-debug-headers-in-prod`             | [`disallow-debug-headers-in-prod.yaml`](./disallow-debug-headers-in-prod.yaml)                         | Finds production routes that use debug headers.                                        |
+| `oidc-disallow-http-issuer`                  | [`disallow-http-for-oidc.yaml`](./disallow-http-for-oidc.yaml)                                         | OIDC issuer must use HTTPS.                                                            |
+| `disallow-http-protocol-for-upstreams`       | [`disallow-http-protocol-for-upstreams.yaml`](./disallow-http-protocol-for-upstreams.yaml)             | Upstream services must use HTTPS.                                                      |
+| `insecure-admin-api`                         | [`disallow-insecure-admin-api.yaml`](./disallow-insecure-admin-api.yaml)                               | Admin API routes must use TLS and a login plugin.                                      |
+| `disallow-key-auth-insecure`                 | [`disallow-key-auth-insecure.yaml`](./disallow-key-auth-insecure.yaml)                                 | Avoids the 'key-auth' plugin, which stores keys in plain text.                         |
+| `disallow-sensitive-info-in-uris`            | [`disallow-sensitive-info-in-uris.yaml`](./disallow-sensitive-info-in-uris.yaml)                       | Looks for secret patterns in route URIs.                                               |
+| `disallow-unauthenticated-routes`            | [`disallow-unauthenticated-routes.yaml`](./disallow-unauthenticated-routes.yaml)                       | All routes must have a login plugin.                                                   |
+| `enforce-acl-on-protected-routes`            | [`enforce-acl-on-protected-routes.yaml`](./enforce-acl-on-protected-routes.yaml)                       | Protected routes must use the ACL plugin.                                              |
+| `oidc-enforce-dpop-validation`               | [`enforce-dpop-validation.yaml`](./enforce-dpop-validation.yaml)                                       | OIDC plugin must use DPoP validation.                                                  |
+| `jwt-claims-validation`                      | [`enforce-jwt-claim-validation.yaml`](./enforce-jwt-claim-validation.yaml)                             | JWT plugin must check 'exp' and 'nbf' claims.                                          |
+| `rbac-least-privilege`                       | [`enforce-rbac-least-privilege.yaml`](./enforce-rbac-least-privilege.yaml)                             | Warns if a consumer has a role like 'super-admin'.                                     |
+| `enforce-request-size-limiting`              | [`enforce-request-size-limiting.yaml`](./enforce-request-size-limiting.yaml)                           | Public routes must have the request-size-limiter plugin.                               |
+| `enforce-https-for-all-routes`               | [`enforce-tls-for-all-connections.yaml`](./enforce-tls-for-all-connections.yaml)                       | All routes must use HTTPS.                                                             |
+| `enforce-upstream-tls-validation`            | [`enforce-upstream-tls-validation.yaml`](./enforce-upstream-tls-validation.yaml)                       | Upstream services using HTTPS must have TLS validation on.                             |
+| `require-bot-detection-on-public-forms`      | [`require-bot-detection-on-public-forms.yaml`](./require-bot-detection-on-public-forms.yaml)           | Public forms must use the bot-detection plugin.                                        |
+| `oidc-client-secret-in-vault`                | [`require-client-secret-in-vault.yaml`](./require-client-secret-in-vault.yaml)                         | OIDC 'client_secret' must be loaded from Kong Vault.                                   |
+| `require-ip-restriction-on-sensitive-routes` | [`require-ip-restriction-on-sensitive-routes.yaml`](./require-ip-restriction-on-sensitive-routes.yaml) | Sensitive routes must use the ip-restriction plugin.                                   |
+| `admin-api-require-ip-restriction`           | [`require-ip-restrictions-for-admin-api.yaml`](./require-ip-restrictions-for-admin-api.yaml)           | Kong Admin API must be protected by the 'ip-restriction' plugin.                       |
+| `upstream-mtls-required`                     | [`require-mtls-for-upstreams.yaml`](./require-mtls-for-upstreams.yaml)                                 | Upstream services must use mutual TLS (mTLS).                                          |
+| `require-response-filtering-for-pii`         | [`require-response-filtering-for-pii.yaml`](./require-response-filtering-for-pii.yaml)                 | Routes with 'pii' must use a response transformation plugin.                           |
+| `require-secure-upstream-tls`                | [`require-secure-upstream-tls.yaml`](./require-secure-upstream-tls.yaml)                               | A service using HTTPS upstream must have 'tls_verify' on and a 'ca_certificates' list. |
